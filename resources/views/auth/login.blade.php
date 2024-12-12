@@ -5,25 +5,26 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- usrs_login -->
+        <!-- Usuário -->
         <div>
             <x-input-label for="usrs_login" :value="__('Usuário')" />
-            <x-text-input id="usrs_login" class="block mt-1 w-full" type="text" name="usrs_login" :value="old('usrs_login')" required
-                autofocus autocomplete="usrs_login" />
+            <x-text-input id="usrs_login" class="block mt-1 w-full" type="text" name="usrs_login" :value="old('usrs_login')" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('usrs_login')" class="mt-2" />
         </div>
 
-        <!-- usrs_senha -->
+        <!-- Senha -->
         <div class="mt-4">
             <x-input-label for="usrs_senha" :value="__('Senha')" />
 
-            <x-text-input id="usrs_senha" class="block mt-1 w-full" type="password" name="usrs_senha" required
-                autocomplete="current-password" />
+            <x-text-input id="usrs_senha" class="block mt-1 w-full"
+                            type="password"
+                            name="usrs_senha"
+                            required autocomplete="current-password" />
 
-            <x-input-error :messages="$errors->get('senha')" class="mt-2" />
+            <x-input-error :messages="$errors->get('usrs_senha')" class="mt-2" />
         </div>
 
-        <!-- unem_id -->
+        <!-- UNEM -->
         <div class="mt-4">
             <x-input-label for="unem_id" :value="__('Unidade Empresarial')" />
             <select name="unem_id" id="unem_id" class="block mt-1 w-full" required>
@@ -36,7 +37,7 @@
 
         <div class="flex items-center justify-end mt-4">
             <x-primary-button class="ms-3">
-                {{ __('Entrar') }}
+                {{ __('Login') }}
             </x-primary-button>
         </div>
     </form>
