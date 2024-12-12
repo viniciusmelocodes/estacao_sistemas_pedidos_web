@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('unem_id');
             $table->foreign('unem_id')->references('unem_id')->on('e_unidades_empresariais');
             $table->unsignedBigInteger('usrs_id');
-            $table->foreign('usrs_id')->references('id')->on('users');
+            $table->foreign('usrs_id')->references('usrs_id')->on('e_usuarios');
             $table->unsignedBigInteger('muni_id');
             $table->foreign('muni_id')->references('muni_id')->on('e_municipios');
             $table->string('pess_nome_razao_social', 60);
@@ -37,9 +37,8 @@ return new class extends Migration
             $table->string('pess_situacao', 1)->default('A');
             $table->timestamp('pess_data_cadastro');
             $table->string('pess_retem_issqn')->default('N');
-            $table->timestamp('pess_atualizacao');
+            $table->timestamp('pess_atualizacao')->default(now());
             $table->string('pess_estacao', 60);
-            $table->timestamps();
         });
     }
 

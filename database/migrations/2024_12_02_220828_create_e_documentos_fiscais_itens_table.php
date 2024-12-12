@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('unem_id');
             $table->foreign('unem_id')->references('unem_id')->on('e_unidades_empresariais');
             $table->unsignedBigInteger('usrs_id');
-            $table->foreign('usrs_id')->references('id')->on('users');
+            $table->foreign('usrs_id')->references('usrs_id')->on('e_usuarios');
             $table->unsignedBigInteger('prod_id');
             $table->foreign('prod_id')->references('prod_id')->on('e_produtos');
             $table->decimal('dfit_quantidade', 18, 4)->default(1);
@@ -46,7 +46,6 @@ return new class extends Migration
             $table->decimal('dfit_percentual_desconto', 18, 6)->default(0);
             $table->timestamp('dfit_atualizacao');
             $table->string('dfit_estacao', 60);
-            $table->timestamps();
         });
     }
 

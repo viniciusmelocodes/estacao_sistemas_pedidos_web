@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('unem_id');
             $table->foreign('unem_id')->references('unem_id')->on('e_unidades_empresariais');
             $table->unsignedBigInteger('usrs_id');
-            $table->foreign('usrs_id')->references('id')->on('users');
+            $table->foreign('usrs_id')->references('usrs_id')->on('e_usuarios');
             $table->unsignedBigInteger('pess_id');
             $table->foreign('pess_id')->references('pess_id')->on('e_pessoas');
             $table->unsignedBigInteger('muni_id');
@@ -51,10 +51,9 @@ return new class extends Migration
             $table->string('dcfs_referencia', 250)->nullable();
             $table->text('dcfs_observacao')->nullable();
             $table->string('dcfs_processamento', 2)->default('99');
-            $table->timestamp('dcfs_processamento_data');
-            $table->timestamp('dcfs_atualizacao');
+            $table->timestamp('dcfs_processamento_data')->default(now());
+            $table->timestamp('dcfs_atualizacao')->default(now());
             $table->string('dcfs_estacao', 60)->nullable();
-            $table->timestamps();
         });
     }
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('unem_id');
             $table->foreign('unem_id')->references('unem_id')->on('e_unidades_empresariais');
             $table->unsignedBigInteger('usrs_id');
-            $table->foreign('usrs_id')->references('id')->on('users');
+            $table->foreign('usrs_id')->references('usrs_id')->on('e_usuarios');
             $table->unsignedBigInteger('frpg_id');
             $table->foreign('frpg_id')->references('frpg_id')->on('e_formas_pagamentos');
             $table->integer('dfpg_quantidade_parcelas')->default(1);
@@ -28,7 +28,6 @@ return new class extends Migration
             $table->string('dfpg_observacao', 350)->nullable();
             $table->timestamp('dfpg_atualizacao');
             $table->string('dfpg_estacao', 60);
-            $table->timestamps();
         });
     }
 
