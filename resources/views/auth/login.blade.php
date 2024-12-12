@@ -5,22 +5,22 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Username -->
+        <!-- usrs_login -->
         <div>
-            <x-input-label for="username" :value="__('Usuário')" />
-            <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required
-                autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('username')" class="mt-2" />
+            <x-input-label for="usrs_login" :value="__('Usuário')" />
+            <x-text-input id="usrs_login" class="block mt-1 w-full" type="text" name="usrs_login" :value="old('usrs_login')" required
+                autofocus autocomplete="usrs_login" />
+            <x-input-error :messages="$errors->get('usrs_login')" class="mt-2" />
         </div>
 
-        <!-- Password -->
+        <!-- usrs_senha -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="usrs_senha" :value="__('Senha')" />
 
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
+            <x-text-input id="usrs_senha" class="block mt-1 w-full" type="password" name="usrs_senha" required
                 autocomplete="current-password" />
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <x-input-error :messages="$errors->get('senha')" class="mt-2" />
         </div>
 
         <!-- unem_id -->
@@ -34,25 +34,9 @@
             <x-input-error :messages="$errors->get('unem_id')" class="mt-2" />
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox"
-                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Lembrar do meu login') }}</span>
-            </label>
-        </div>
-
         <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    href="{{ route('password.request') }}">
-                    {{ __('Esqueceu sua senha?') }}
-                </a>
-            @endif
-
             <x-primary-button class="ms-3">
-                {{ __('Login') }}
+                {{ __('Entrar') }}
             </x-primary-button>
         </div>
     </form>

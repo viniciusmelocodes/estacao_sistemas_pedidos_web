@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -27,8 +29,8 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
+            'usrs_login' => ['required', 'string'],
+            'usrs_senha' => ['required', 'string'],
         ];
     }
 
@@ -41,12 +43,28 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if (! Auth::attempt($this->only('usrs_login', 'usrs_senha'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
+            $user = User::where('usrs_login', $this->usrs_login)->where('unem_id', $this->unem_id)->first();
+
+            if ($user) {
+                if ($user->usrs_situacao == 'I') {
+                    throw ValidationException::withMessages([
+                        'usrs_login' => 'Usuário inativo',
+                    ]);
+                } else {
+                    if (! Hash::check($this->usrs_senha, $user->usrs_senha)) {
+                        throw ValidationException::withMessages([
+                            'usrs_login' => trans('auth.failed'),
+                        ]);
+                    }
+                }
+            } else {
+                throw ValidationException::withMessages([
+                    'usrs_login' => trans('auth.failed'),
+                ]);
+            }
         }
 
         RateLimiter::clear($this->throttleKey());
@@ -68,7 +86,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            'usrs_login' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -80,6 +98,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('usrs_login')).'|'.$this->ip());
     }
 }
