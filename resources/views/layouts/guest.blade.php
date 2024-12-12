@@ -10,7 +10,6 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -28,21 +27,4 @@
             </div>
         </div>
     </body>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-        $(document).ready(function() {
-            $("#unem_id").select2()
-
-            $("#form_register").submit(function(e) {
-                if ($("#senha_de_cadastro").val() != 'TropicalNovoCadastro$0299') {
-                    Swal.fire('Senha de cadastro inválida!', 'Consulte o administrador de sistemas para mais detalhes.', 'warning');
-                    return false;
-                }
-            })
-        })
-    </script>
 </html>
