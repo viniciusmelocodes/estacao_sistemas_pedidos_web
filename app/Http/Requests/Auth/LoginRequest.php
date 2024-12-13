@@ -2,9 +2,12 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\EUsuario;
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -27,7 +30,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -41,7 +44,12 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $this->handleUser();
+
+        $credentials = $this->only('email', 'password');
+        $credentials['email'] = $this->email . '@email.com';
+        
+        if (! Auth::attempt($credentials)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -81,5 +89,47 @@ class LoginRequest extends FormRequest
     public function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+    }
+
+    public function handleUser()
+    {
+        // Buscar e-mail por login de sistema
+        $usuario = EUsuario::where('usrs_login', $this->email)->where('unem_id', $this->unem_id)->where('usrs_situacao', 'A')->first();
+
+        if($usuario) {
+            if (!str_starts_with($usuario->usrs_senha, '$2y$')) {
+                $matchPassword = EUsuario::where('usrs_login', $this->email)
+                    ->whereRaw('usrs_senha = SHA2(' . $this->password . ', 256)')
+                    ->first();
+                    
+                if ($matchPassword) {
+                    $usuario->usrs_senha = Hash::make($this->password);
+                    $usuario->save();
+
+                    $user = User::where('email', $this->email . '@email.com')->first();
+
+                    if (!$user) {
+                        User::create([
+                            'name' => $usuario->usrs_nome,
+                            'email' => $this->email . '@email.com',
+                            'password' => $usuario->usrs_senha,
+                        ]);
+                    } else {
+                        $user->name = $usuario->usrs_nome;
+                        $user->email = $this->email . '@email.com';
+                        $user->password = $usuario->usrs_senha;
+                        $user->save();
+                    }
+                } else {
+                    throw ValidationException::withMessages([
+                        'email' => trans('auth.failed'),
+                    ]);
+                }
+            }
+        } else {
+            throw ValidationException::withMessages([
+                'email' => trans('auth.failed'),
+            ]);
+        }
     }
 }

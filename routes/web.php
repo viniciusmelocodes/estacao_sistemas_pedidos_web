@@ -4,7 +4,15 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('auth/login');
+});
+
+Route::get('/login', function () {
+    return view('auth/login');
+});
+
+Route::get('/criptografarSenha/{senha}', function($senha){
+    return Hash::make($senha);
 });
 
 Route::get('/listagemPedidos', function(){
@@ -14,9 +22,5 @@ Route::get('/listagemPedidos', function(){
 Route::get('/cadastroPedido', function(){
     return view('cadastroPedido');
 })->middleware(['auth', 'verified'])->name('cadastroPedido');
-
-Route::get('/criptografarSenha/{senha}', function($senha){
-    return Hash::make($senha);
-});
 
 require __DIR__.'/auth.php';
