@@ -30,13 +30,15 @@
 
     const grid = new Grid({
         columns:[
-            {
-                        name: 'Numero do Pedido',
-                        formatter: (_, row) => html(`<button class="btn btn-primary">${row.cells[0].data}</button>`)
-            },
-            "Data do Pedido", "CPF/CNPJ do cliente"],
+                {
+                    name: 'Número do Pedido',
+                    formatter: (_, row) => html(`<button class="btn btn-primary">${row.cells[0].data}</button>`)
+                },
+                "Data do Pedido", 
+                "CPF/CNPJ do cliente"
+            ],
             sort: true,
-            search: true, 
+            search: true,
             pagination: true,
             language: {
                 'search': {
@@ -51,7 +53,7 @@
                     'of': 'de',
                     'to': 'até',
                     'results': () => 'resultados',
-                },     
+                },
                 'loading': 'Carregando...',
                 'noRecordsFound': 'Nenhum registro encontrado',
                 'error': 'Ocorreu um erro ao buscar os dados',
@@ -59,7 +61,7 @@
         data : [
             ["1","25/11/2024","094.048.581-30"],
             ["2","28/11/2024","86.578.185/0001-31"],
-            ["32","29/11/2024","03.608.105/0001-16	"]
+            ["32","29/11/2024","03.608.105/0001-16"]
         ]
 
     }).render(document.getElementById("wrapper"));

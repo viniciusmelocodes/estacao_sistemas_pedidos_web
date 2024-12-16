@@ -26,11 +26,9 @@
 
         <!-- UNEM -->
         <div class="mt-4">
-            <x-input-label for="unem_id" :value="__('Unidade Empresarial')" />
-            <select name="unem_id" id="unem_id" class="block mt-1 w-full" required>
+            <x-input-label for="unem-id" :value="__('Unidade Empresarial')" />
+            <select name="unem_id" id="unem-id" class="block mt-1 w-full" required>
                 <option value="">Selecione</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
             </select>
             <x-input-error :messages="$errors->get('unem_id')" class="mt-2" />
         </div>

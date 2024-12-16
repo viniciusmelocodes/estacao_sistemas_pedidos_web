@@ -48,8 +48,8 @@ class LoginRequest extends FormRequest
 
         $credentials = $this->only('email', 'password');
         $credentials['email'] = $this->email . '@email.com';
-        
-        if (! Auth::attempt($credentials)) {
+
+        if (!Auth::attempt($credentials)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -67,7 +67,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -88,7 +88,7 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
     }
 
     public function handleUser()
@@ -96,12 +96,13 @@ class LoginRequest extends FormRequest
         // Buscar e-mail por login de sistema
         $usuario = EUsuario::where('usrs_login', $this->email)->where('unem_id', $this->unem_id)->where('usrs_situacao', 'A')->first();
 
-        if($usuario) {
+        if ($usuario) {
+            // Caso a senha não começa com $2y$ (padrão bcrypt)
             if (!str_starts_with($usuario->usrs_senha, '$2y$')) {
                 $matchPassword = EUsuario::where('usrs_login', $this->email)
                     ->whereRaw('usrs_senha = SHA2(' . $this->password . ', 256)')
                     ->first();
-                    
+
                 if ($matchPassword) {
                     $usuario->usrs_senha = Hash::make($this->password);
                     $usuario->save();
