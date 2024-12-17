@@ -13,7 +13,15 @@ class HelpersController extends Controller
         $data = [];
 
         foreach ($unems as $unem) {
-            array_push($data, ['unem_id' => $unem->unem_id, 'unem_logo' => 'https://cdn0.iconfinder.com/data/icons/zondicons/20/store-front-256.png', 'unem_nome_fantasia' => $unem->unem_nome_fantasia]);
+            array_push(
+                $data,
+                [
+                    'unem_id' => $unem->unem_id,
+                    'unem_codigo' => $unem->unem_codigo,
+                    'unem_logo' => 'https://cdn0.iconfinder.com/data/icons/zondicons/20/store-front-256.png',
+                    'unem_nome_fantasia' => $unem->unem_nome_fantasia
+                ]
+            );
         }
 
         return response()->json($data);
