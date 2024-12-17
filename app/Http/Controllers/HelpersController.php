@@ -18,7 +18,7 @@ class HelpersController extends Controller
                 [
                     'unem_id' => $unem->unem_id,
                     'unem_codigo' => $unem->unem_codigo,
-                    'unem_logo' => 'https://cdn0.iconfinder.com/data/icons/zondicons/20/store-front-256.png',
+                    'unem_logo' => base64_encode($unem->unem_logo),
                     'unem_nome_fantasia' => $unem->unem_nome_fantasia
                 ]
             );

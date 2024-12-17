@@ -93,14 +93,14 @@
 
                     Toastify({
                         text: "Unidades empresariais carregadas com sucesso!",
-                        duration: 3000,
+                        duration: 2000,
                         newWindow: true,
                         close: true,
                         gravity: "top",
                         position: "center",
                         stopOnFocus: true,
                         style: {
-                            background: "orange",
+                            background: "green",
                         },
                     }).showToast();
                 })
@@ -111,9 +111,8 @@
             $('#unem_id').on('select2:select', function(e) {
                 Swal.fire({
                     title: e.params.data.text,
-                    imageUrl: e.params.data.icon,
-                    imageWidth: 200,
-                    imageHeight: 200,
+                    html: '<center><img src="data:image/jpeg;base64, ' + e.params.data.icon +
+                        '" width="100"/></center>',
                     timer: 1000,
                     timerProgressBar: true,
                     position: "top-end",
