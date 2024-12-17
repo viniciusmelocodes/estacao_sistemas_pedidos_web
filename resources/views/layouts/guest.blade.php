@@ -50,7 +50,7 @@
 <script>
     @auth
     Swal.fire({
-        title: 'Você já está logado. Deseja voltar ao sistema?',
+        title: 'Você já está logado. Deseja ir para lista de pedidos?',
         icon: 'question',
         confirmButtonText: "Sim",
         denyButtonText: "Não",
