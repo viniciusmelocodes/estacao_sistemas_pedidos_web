@@ -94,7 +94,9 @@ class LoginRequest extends FormRequest
     public function handleUser()
     {
         // Buscar e-mail por login de sistema
-        $usuario = EUsuario::where('usrs_login', $this->email)->where('unem_id', $this->unem_id)->where('usrs_situacao', 'A')->first();
+        $usuario = EUsuario::where('usrs_login', $this->email)
+            ->where('usrs_situacao', 'A')
+            ->first();
 
         if ($usuario) {
             // Caso a senha não começa com $2y$ (padrão bcrypt)

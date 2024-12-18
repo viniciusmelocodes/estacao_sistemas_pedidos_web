@@ -21,13 +21,13 @@ class EUsuario extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'unem_id',
         'usrs_login',
         'usrs_nome',
         'usrs_senha',
         'usrs_situacao',
-        'usrs_nivel',
         'usrs_desconto_mercadoria',
         'usrs_desconto_servico',
+        'created_at',
+        'updated_at'
     ];
 }
