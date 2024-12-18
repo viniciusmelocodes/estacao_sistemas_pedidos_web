@@ -135,6 +135,11 @@
             </div>
 
         </div>
+        <button
+                class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+                onclick="window.location.href='/listagemPedidos'">
+                Visualizar lista de pedidos.
+            </button>
     </div>
 </body>
 
