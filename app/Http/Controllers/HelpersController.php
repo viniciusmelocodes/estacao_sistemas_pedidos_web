@@ -2,34 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EUnidadeEmpresarial;
+use App\Models\EDocumentoFiscal;
 use App\Models\EUsuarioAcesso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class HelpersController extends Controller
 {
-    public function getAllBusinessUnits()
-    {
-        $unems = EUnidadeEmpresarial::where('unem_situacao', 'Ativa')->get();
-
-        $data = [];
-
-        foreach ($unems as $unem) {
-            array_push(
-                $data,
-                [
-                    'unem_id' => $unem->unem_id,
-                    'unem_codigo' => $unem->unem_codigo,
-                    'unem_logo' => base64_encode($unem->unem_logo),
-                    'unem_nome_fantasia' => $unem->unem_nome_fantasia
-                ]
-            );
-        }
-
-        return response()->json($data);
-    }
-
     public function getAllBusinessUnitsToUserLogged()
     {
         if (!is_null(Auth::user()->unem_id)) {
@@ -72,6 +51,17 @@ class HelpersController extends Controller
             return response()->json(['message' => 'Unidade empresarial definida com sucesso!']);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Erro ao definir a unidade empresarial de usuário logado!'], 500);
+        }
+    }
+
+    public function getAllSales()
+    {
+        try {
+            $pedidos = EDocumentoFiscal::with(['pessoa'])->orderBy('dcfs_atualizacao', 'desc')->get();
+
+            return response()->json($pedidos);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Erro ao buscar pedidos!'], 500);
         }
     }
 }

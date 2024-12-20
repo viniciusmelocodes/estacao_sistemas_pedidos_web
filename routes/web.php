@@ -18,9 +18,9 @@ Route::get('/listagemPedidos', [HelpersController::class, 'getSalesListing'])->m
 
 Route::get('/cadastroPedido', [HelpersController::class, 'getNewSale'])->middleware(['auth', 'verified'])->name('cadastroPedido');
 
-Route::get('/getAllBusinessUnits', [HelpersController::class, 'getAllBusinessUnits'])->name('getAllBusinessUnits');
-
 Route::post('/setUnemIdToUserLogged', [HelpersController::class, 'setUnemIdToUserLogged'])->name('setUnemIdToUserLogged');
+
+Route::get('/getAllSales', [HelpersController::class, 'getAllSales'])->name('getAllSales');
 
 Route::get('/criptografarSenha/{senha}', function ($senha) {
     return Hash::make($senha);

@@ -50,4 +50,9 @@ class EDocumentoFiscal extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function pessoa()
+    {
+        return $this->belongsTo(EPessoa::class, 'pess_id');
+    }
 }

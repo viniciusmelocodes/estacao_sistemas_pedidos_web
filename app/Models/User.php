@@ -46,4 +46,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function unidadeEmpresarial()
+    {
+        return $this->belongsTo(EUnidadeEmpresarial::class, 'unem_id');
+    }
 }
