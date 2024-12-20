@@ -100,7 +100,6 @@
                             'error': 'Ocorreu um erro ao buscar os dados',
                         },
                         data: dataSales
-
                     }).render(document.getElementById("wrapper"));
                 }
             })
