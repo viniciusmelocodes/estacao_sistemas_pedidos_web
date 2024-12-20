@@ -71,7 +71,7 @@ class HelpersController extends Controller
     
             return response()->json(['message' => 'Unidade empresarial definida com sucesso!']);
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'Erro ao definir a unidade empresarial de usuário logado!']);
+            return response()->json(['message' => 'Erro ao definir a unidade empresarial de usuário logado!'], 500);
         }
     }
 }
