@@ -36,6 +36,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $user = Auth::user();
+        $user->unem_id = null;
+        $user->save();
+        
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

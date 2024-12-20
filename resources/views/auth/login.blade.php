@@ -23,22 +23,10 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Unidade Empresarial -->
-        <div class="mt-4">
-            <x-input-label for="unem_id" :value="__('Unidade Empresarial')" />
-            <select name="unem_id" id="unem_id" class="block mt-1 w-full" required>
-                <option value=""></option>
-            </select>
-            <x-input-error :messages="$errors->get('unem_id')" class="mt-2" />
-        </div>
-
         <div class="flex items-center justify-end mt-4">
             <x-primary-button class="ms-3">
                 {{ __('Entrar') }}
             </x-primary-button>
         </div>
     </form>
-
-    <!-- Ícone da Unidade Empresarial -->
-    <div id="icon-unem" class="mt-6"></div>
 </x-guest-layout>

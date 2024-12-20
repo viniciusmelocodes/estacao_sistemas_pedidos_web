@@ -12,8 +12,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -22,11 +21,9 @@
 <body class="font-sans text-gray-900 antialiased">
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
         @auth
-            <button
-                class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
-                onclick="window.location.href='/listagemPedidos'">
-                Visualizar lista de pedidos.
-            </button>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                <i class="bi bi-exclamation-circle"></i> {{ __('Aguarde um momento...') }}
+            </h2>
         @else
             <div>
                 <a href="/">
@@ -42,75 +39,10 @@
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.8/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     @auth
-    Swal.fire({
-        title: 'Você já está logado. Deseja ir para lista de pedidos?',
-        icon: 'question',
-        confirmButtonText: "Sim",
-        denyButtonText: "Não",
-        showDenyButton: true,
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = '/listagemPedidos';
-        }
-    });
-    @else
-        $(document).ready(function() {
-            function formatOption(option) {
-                if (!option.id) {
-                    return option.text;
-                }
-
-                var optionWithImage = $('<p>' + option.text + '</p>');
-
-                return optionWithImage;
-            }
-
-            let options = []
-
-            axios.get('/getAllUnidadesEmpresariais')
-                .then(function(response) {
-                    response.data.forEach(function(item) {
-                        options.push({
-                            id: item.unem_id,
-                            icon: item.unem_logo,
-                            text: item.unem_codigo + ' - ' + item.unem_nome_fantasia,
-                        });
-                    })
-
-                    $('#unem_id').select2({
-                        data: options,
-                        placeholder: 'Selecione uma unidade empresarial',
-                        templateResult: formatOption,
-                        templateSelection: formatOption
-                    });
-
-                    const notyf = new Notyf({
-                        duration: 4000,
-                        position: {
-                            x: 'center',
-                            y: 'top',
-                        },
-                        dismissible: true
-                    });
-
-                    notyf.success('Unidades empresariais carregadas com sucesso!');
-                })
-                .catch(function(error) {
-                    console.log(error);
-                })
-
-            $('#unem_id').on('select2:select', function(e) {
-                $("#icon-unem").html('<center><img src="data:image/jpeg;base64, ' + e.params.data.icon +
-                    '" width="100"/></center>');
-            });
-        })
+        window.location.href = '/listagemPedidos';
     @endauth
 </script>
 

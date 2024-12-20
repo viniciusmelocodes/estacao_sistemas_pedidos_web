@@ -11,142 +11,96 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.8/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="font-sans antialiased">
     <div class="container mx-auto px-4 mt-6">
-        <p>
-            Total: {{ count($unems) }}
-        </p>
-        <p>
-            Id usuário logado: {{ Auth::user()->id }}
-        </p>
-
         <form method="POST" action="{{ route('logout') }}">
             @csrf
 
-            <button :href="route('logout')"
-                onclick="event.preventDefault();
-                        this.closest('form').submit();"
-                class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-                Sair
-            </button>
+            <div class="flex  justify-end">
+                <button :href="route('logout')"
+                    onclick="event.preventDefault();
+                            this.closest('form').submit();"
+                    class="bg-sky-400 hover:bg-sky-500 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-sky-800 hover:border-sky-600 rounded">
+                    Sair
+                </button>
+            </div>
         </form>
 
-        <div class="flex flex-wrap justify-center mt-10">
+        @if (count($unems))
+            <center>
+                <h2 class="text-black dark:text-white text-lg font-medium">Selecione unidade empresarial para continuar:
+                </h2>
+            </center>
+        @endif
 
-            <!-- card 1 -->
-            <div class="p-4 max-w-sm">
-                <div class="flex rounded-lg h-full dark:bg-gray-800 bg-blue-400 p-8 flex-col">
-                    <div class="flex items-center mb-3">
-                        <div
-                            class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full dark:bg-indigo-500 bg-indigo-500 text-white flex-shrink-0">
-                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                            </svg>
+        <div class="flex flex-wrap justify-center mt-4">
+            @foreach ($unems as $unem)
+                <div class="p-4 max-w-sm" onclick="selecionarUnidade({{ $unem->unem_id }})">
+                    <div class="flex rounded-lg h-full dark:bg-gray-800 bg-cyan-500 p-8 flex-col">
+                        <div class="flex items-center mb-3">
+                            <h2 class="text-white dark:text-white text-lg font-medium">{{ $unem->unem_nome_fantasia }}
+                            </h2>
                         </div>
-                        <h2 class="text-white dark:text-white text-lg font-medium">Feature 1</h2>
-                    </div>
-                    <div class="flex flex-col justify-between flex-grow">
-                        <p class="leading-relaxed text-base text-white dark:text-gray-300">
-                            Blue bottle crucifix vinyl post-ironic four dollar toast vegan taxidermy. Gastropub indxgo
-                            juice poutine.
-                        </p>
-                        <a href="#"
-                            class="mt-3 text-black dark:text-white hover:text-blue-600 inline-flex items-center">Learn
-                            More
-                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                                <path d="M5 12h14M12 5l7 7-7 7"></path>
-                            </svg>
-                        </a>
+                        <div class="flex flex-col justify-between flex-grow">
+                            <center>
+                                <img src="data:image/jpeg;base64, {{ base64_encode($unem->unem_logo) }}"
+                                    width="100" />
+                            </center>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- card 2 -->
-            <div class="p-4 max-w-sm">
-                <div class="flex rounded-lg h-full dark:bg-gray-800 bg-blue-400 p-8 flex-col">
-                    <div class="flex items-center mb-3">
-                        <div
-                            class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full dark:bg-indigo-500 bg-indigo-500 text-white flex-shrink-0">
-                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                            </svg>
-                        </div>
-                        <h2 class="text-white dark:text-white text-lg font-medium">Feature 2</h2>
-                    </div>
-                    <div class="flex flex-col justify-between flex-grow">
-                        <p class="leading-relaxed text-base text-white dark:text-gray-300">
-                            Lorem ipsum dolor sit amet. In quos laboriosam non neque eveniet 33 nihil molestias. Rem
-                            perspiciatis iure ut laborum inventore et maxime amet.
-                        </p>
-                        <a href="#"
-                            class="mt-3 text-black dark:text-white hover:text-blue-600 inline-flex items-center">Learn
-                            More
-                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                                <path d="M5 12h14M12 5l7 7-7 7"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- card 3 -->
-            <div class="p-4 max-w-sm">
-                <div class="flex rounded-lg h-full dark:bg-gray-800 bg-blue-400 p-8 flex-col">
-                    <div class="flex items-center mb-3">
-                        <div
-                            class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full dark:bg-indigo-500 bg-indigo-500 text-white flex-shrink-0">
-                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                            </svg>
-                        </div>
-                        <h2 class="text-white dark:text-white text-lg font-medium">Feature 3</h2>
-                    </div>
-                    <div class="flex flex-col justify-between flex-grow">
-                        <p class="leading-relaxed text-base text-white dark:text-gray-300">
-                            Lorem ipsum dolor sit amet. In quos laboriosam non neque eveniet 33 nihil molestias. Rem
-                            perspiciatis iure ut laborum inventore et maxime amet.
-                        </p>
-                        <a href="#"
-                            class="mt-3 text-black dark:text-white hover:text-blue-600 inline-flex items-center">Learn
-                            More
-                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                                <path d="M5 12h14M12 5l7 7-7 7"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
+            @endforeach
         </div>
-        <button
-                class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
-                onclick="window.location.href='/listagemPedidos'">
-                Visualizar lista de pedidos.
-            </button>
     </div>
 </body>
 
 <script>
-    $(document).ready(function() {
-        $('.select2').select2();
-    });
+    function selecionarUnidade(id) {
+        const nome = '{{ Auth::user()->name }}';
+        
+        const notyf = new Notyf({
+            duration: 10000,
+            position: {
+                x: 'center',
+                y: 'top',
+            },
+            types: [{
+                type: 'warning',
+                background: 'orange',
+            }]
+        });
+
+        notyf.open({
+            type: 'warning',
+            message: '<i class="bi bi-exclamation-circle"></i> Aguarde um momento...'
+        });
+
+        axios.post('/setUnemIdToUserLogged', {
+                unemId: id,
+            })
+            .then(function(response) {
+                notyf.dismissAll();
+
+                notyf.success('Bem vindo(a), ' + nome + '!');
+
+                setTimeout(() => {
+                    window.location.href = '/listagemPedidos';
+                }, 3000);
+            })
+            .catch(function(error) {
+                console.error(error);
+            });
+    }
 </script>
 
 </html>

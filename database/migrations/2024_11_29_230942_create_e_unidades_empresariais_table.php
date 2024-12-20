@@ -36,7 +36,7 @@ return new class extends Migration
             $table->date('unem_data_fundacao')->nullable();
             $table->string('unem_mensagem', 180)->nullable();
             $table->string('unem_situacao', 30)->default('Ativa');
-            $table->binary('unem_logo')->nullable();
+            $table->longText('unem_logo')->charset('binary')->nullable();
             $table->timestamps();
         });
     }

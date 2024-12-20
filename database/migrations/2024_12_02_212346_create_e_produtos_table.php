@@ -45,7 +45,7 @@ return new class extends Migration
             $table->string('prod_tipo_item', 2)->default('00');
             $table->integer('prod_origem')->default(0);
             $table->string('prod_movimenta_estoque', 1)->default('S');
-            $table->binary('prod_foto')->nullable();
+            $table->longText('prod_foto')->charset('binary')->nullable();
             $table->timestamps();
         });
     }
