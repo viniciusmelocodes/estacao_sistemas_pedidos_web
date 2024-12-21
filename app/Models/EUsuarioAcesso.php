@@ -17,4 +17,9 @@ class EUsuarioAcesso extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function unidadeEmpresarial()
+    {
+        return $this->belongsTo(EUnidadeEmpresarial::class, 'unem_id');
+    }
 }

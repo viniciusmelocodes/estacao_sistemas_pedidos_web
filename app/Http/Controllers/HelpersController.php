@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EDocumentoFiscal;
+use App\Models\EPessoa;
 use App\Models\EUsuarioAcesso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +16,9 @@ class HelpersController extends Controller
             return redirect()->route('listagemPedidos');
         }
 
-        $unems = EUsuarioAcesso::select('a.*')
-            ->join('e_unidades_empresariais as a', 'a.unem_id', '=', 'e_usuarios_acessos.unem_id')
-            ->where('a.unem_situacao', 'Ativa')
+        $unems = EUsuarioAcesso::select('unem.*')
+            ->join('e_unidades_empresariais as unem', 'unem.unem_id', '=', 'e_usuarios_acessos.unem_id')
+            ->where('unem.unem_situacao', 'Ativa')
             ->get();
 
         return view('selecaoUnidadeEmpresarial', compact('unems'));
@@ -57,11 +58,22 @@ class HelpersController extends Controller
     public function getAllSales()
     {
         try {
-            $pedidos = EDocumentoFiscal::with(['pessoa'])->orderBy('dcfs_atualizacao', 'desc')->get();
+            $sales = EDocumentoFiscal::with(['pessoa'])->orderBy('dcfs_atualizacao', 'desc')->get();
 
-            return response()->json($pedidos);
+            return response()->json($sales);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Erro ao buscar pedidos!'], 500);
+        }
+    }
+
+    public function getAllPeople()
+    {
+        try {
+            $people = EPessoa::where('pess_situacao', 'A')->orderBy('pess_atualizacao','desc')->get();
+
+            return response()->json($people);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Erro ao buscar pessoas!'], 500);
         }
     }
 }

@@ -11,14 +11,14 @@
         <div class="flex justify-end">
             <button
                 class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
-                onclick="window.location.href='/cadastroPedido'">Cadastrar novo pedido</button>
+                onclick="window.location.href='/cadastroPedido'">Novo pedido</button>
         </div>
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <div class="flex justify-center" id="loading">
-                        <p class="text-lg">Carregando dados...</p>
+                    <div class="flex justify-center" id="divBuscandoPedidos">
+                        <p class="text-lg">Buscando pedidos...</p>
                     </div>
                     <div id="wrapper"></div>
                 </div>
@@ -62,46 +62,44 @@
                     ])
                 })
 
-                if (dataSales.length > 0) {
-                    document.getElementById('loading').style.display = 'none';
+                document.getElementById('divBuscandoPedidos').style.display = 'none';
 
-                    const grid = new Grid({
-                        columns: [
-                            "Nº Pedido",
-                            "Data",
-                            "Nome/Razão Social/Fantasia",
-                            "Valor Total",
-                            {
-                                name: 'Ações',
-                                formatter: (_, row) => html(
-                                    `<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" onclick="alert('${row.cells[0].data}')">Editar</button>`
-                                )
-                            }
-                        ],
-                        sort: true,
-                        search: true,
-                        pagination: true,
-                        language: {
-                            'search': {
-                                'placeholder': 'Busque pelo código ou data ...'
-                            },
-                            'pagination': {
-                                'previous': 'Anterior',
-                                'next': 'Próxima',
-                                'navigate': (page, pages) => `Página ${page} de ${pages}`,
-                                'page': (page) => `Página ${page}`,
-                                'showing': 'Mostrando',
-                                'of': 'de',
-                                'to': 'até',
-                                'results': () => 'resultados',
-                            },
-                            'loading': 'Carregando...',
-                            'noRecordsFound': 'Nenhum registro encontrado',
-                            'error': 'Ocorreu um erro ao buscar os dados',
+                const grid = new Grid({
+                    columns: [
+                        "Nº Pedido",
+                        "Data",
+                        "Nome/Razão Social/Fantasia",
+                        "Valor Total",
+                        {
+                            name: 'Ações',
+                            formatter: (_, row) => html(
+                                `<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" onclick="alert('${row.cells[0].data}')">Editar</button>`
+                            )
+                        }
+                    ],
+                    sort: true,
+                    search: true,
+                    pagination: true,
+                    language: {
+                        'search': {
+                            'placeholder': 'Pesquise seu pedido...'
                         },
-                        data: dataSales
-                    }).render(document.getElementById("wrapper"));
-                }
+                        'pagination': {
+                            'previous': 'Anterior',
+                            'next': 'Próxima',
+                            'navigate': (page, pages) => `Página ${page} de ${pages}`,
+                            'page': (page) => `Página ${page}`,
+                            'showing': 'Mostrando',
+                            'of': 'de',
+                            'to': 'até',
+                            'results': () => 'resultados',
+                        },
+                        'loading': 'Carregando...',
+                        'noRecordsFound': 'Nenhum registro encontrado',
+                        'error': 'Ocorreu um erro ao buscar os dados',
+                    },
+                    data: dataSales
+                }).render(document.getElementById("wrapper"));
             })
             .catch(error => {
                 console.log(error)

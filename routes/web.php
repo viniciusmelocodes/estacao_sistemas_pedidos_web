@@ -13,14 +13,11 @@ Route::get('/login', function () {
 });
 
 Route::get('/selecaoUnidadeEmpresarial', [HelpersController::class, 'getAllBusinessUnitsToUserLogged'])->middleware(['auth', 'verified'])->name('selecaoUnidadeEmpresarial');
-
 Route::get('/listagemPedidos', [HelpersController::class, 'getSalesListing'])->middleware(['auth', 'verified'])->name('listagemPedidos');
-
 Route::get('/cadastroPedido', [HelpersController::class, 'getNewSale'])->middleware(['auth', 'verified'])->name('cadastroPedido');
-
 Route::post('/setUnemIdToUserLogged', [HelpersController::class, 'setUnemIdToUserLogged'])->name('setUnemIdToUserLogged');
-
 Route::get('/getAllSales', [HelpersController::class, 'getAllSales'])->name('getAllSales');
+Route::get('/getAllPeople', [HelpersController::class, 'getAllPeople'])->name('getAllPeople');
 
 Route::get('/criptografarSenha/{senha}', function ($senha) {
     return Hash::make($senha);
