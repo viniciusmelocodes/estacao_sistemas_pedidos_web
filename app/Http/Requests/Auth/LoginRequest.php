@@ -113,11 +113,13 @@ class LoginRequest extends FormRequest
 
                     if (!$user) {
                         User::create([
+                            'usrs_id' => $usuario->usrs_id,
                             'name' => $usuario->usrs_nome,
                             'email' => $this->email . '@email.com',
                             'password' => $usuario->usrs_senha,
                         ]);
                     } else {
+                        $user->usrs_id = $usuario->usrs_id;
                         $user->name = $usuario->usrs_nome;
                         $user->email = $this->email . '@email.com';
                         $user->password = $usuario->usrs_senha;

@@ -9,6 +9,8 @@ class EDocumentoFiscal extends Model
     protected $table = 'e_documentos_fiscais';
     
     protected $primaryKey = 'dcfs_id';
+
+    public $timestamps = false;
     
     protected $fillable = [
         'unem_id',
@@ -47,12 +49,20 @@ class EDocumentoFiscal extends Model
         'dcfs_processamento_data',
         'dcfs_atualizacao',
         'dcfs_estacao',
-        'created_at',
-        'updated_at'
     ];
 
     public function pessoa()
     {
         return $this->belongsTo(EPessoa::class, 'pess_id');
+    }
+
+    public function itens()
+    {
+        return $this->hasMany(EDocumentoFiscalItem::class, 'dcfs_id');
+    }
+
+    public function pagamentos()
+    {
+        return $this->hasMany(EDocumentoFiscalPagamento::class, 'dcfs_id');
     }
 }

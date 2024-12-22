@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\EDocumentoFiscal;
+use App\Models\EDocumentoFiscalItem;
+use App\Models\EDocumentoFiscalPagamento;
 use App\Models\EPessoa;
+use App\Models\EUnidadeEmpresarial;
 use App\Models\EUsuarioAcesso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class HelpersController extends Controller
 {
@@ -24,12 +28,54 @@ class HelpersController extends Controller
         return view('selecaoUnidadeEmpresarial', compact('unems'));
     }
 
+    public function getBusinessUnitData(Request $request)
+    {
+        try {
+            if ($request->has('id')) {
+                $unem = EUnidadeEmpresarial::find($request->get('id'));
+            } else {
+                $unem = EUnidadeEmpresarial::find(Auth::user()->unem_id);
+            }
+
+            return response()->json([
+                "unem_id" => $unem->unem_id,
+                "muni_id" => $unem->muni_id,
+                "unem_codigo" => $unem->unem_codigo,
+                "unem_razao_social" => $unem->unem_razao_social,
+                "unem_nome_fantasia" => $unem->unem_nome_fantasia,
+                "unem_sigla" => $unem->unem_sigla,
+                "unem_cnpj" => $unem->unem_cnpj,
+                "unem_inscricao_estadual" => $unem->unem_inscricao_estadual,
+                "unem_inscricao_municipal" => $unem->unem_inscricao_municipal,
+                "unem_codigo_regime_tributario" => $unem->unem_codigo_regime_tributario,
+                "unem_ende_logradouro" => $unem->unem_ende_logradouro,
+                "unem_ende_numero" => $unem->unem_ende_numero,
+                "unem_ende_complemento" => $unem->unem_ende_complemento,
+                "unem_ende_bairro" => $unem->unem_ende_bairro,
+                "unem_ende_cep" => $unem->unem_ende_cep,
+                "unem_fone_numero" => $unem->unem_fone_numero,
+                "unem_fone_fax" => $unem->unem_fone_fax,
+                "unem_fone_celular" => $unem->unem_fone_celular,
+                "unem_email" => $unem->unem_email,
+                "unem_site" => $unem->unem_site,
+                "unem_data_fundacao" => $unem->unem_data_fundacao,
+                "unem_mensagem" => $unem->unem_mensagem,
+                "unem_situacao" => $unem->unem_situacao,
+                "unem_logo" => base64_encode($unem->unem_logo),
+                "created_at" => $unem->created_at,
+                "updated_at" => $unem->updated_at
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Erro ao obter dados de unidade empresarial! Detalhes: ' . $th->getMessage()], 500);
+        }
+    }
+
     public function getSalesListing()
     {
         if (is_null(Auth::user()->unem_id)) {
             return redirect()->route('selecaoUnidadeEmpresarial');
         }
-        
+
         return view('listagemPedidos');
     }
 
@@ -48,7 +94,7 @@ class HelpersController extends Controller
             $user = Auth::user();
             $user->unem_id = $request->get('unemId');
             $user->save();
-    
+
             return response()->json(['message' => 'Unidade empresarial definida com sucesso!']);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Erro ao definir a unidade empresarial de usuário logado!'], 500);
@@ -69,11 +115,67 @@ class HelpersController extends Controller
     public function getAllPeople()
     {
         try {
-            $people = EPessoa::where('pess_situacao', 'A')->orderBy('pess_atualizacao','desc')->get();
+            $people = EPessoa::where('pess_situacao', 'A')->where('unem_id', Auth::user()->unem_id)->orderBy('pess_atualizacao', 'desc')->get();
 
             return response()->json($people);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Erro ao buscar pessoas!'], 500);
+        }
+    }
+
+    public function getSale(Request $request)
+    {
+        try {
+            $sale = EDocumentoFiscal::with(['pessoa', 'itens', 'pagamentos'])->where('dcfs_id', $request->get('id'))->first();
+
+            return response()->json($sale);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Erro ao buscar pedidos! Detalhes: ' . $th->getMessage()], 500);
+        }
+    }
+
+    public function saveSale(Request $request)
+    {
+        try {
+            dd($request->all());
+
+            $sale = new EDocumentoFiscal();
+
+            $sale->pess_id = $request->get('pess_id');
+            $sale->unem_id = Auth::user()->unem_id;
+            $sale->usrs_id = Auth::user()->usrs_id;
+            $sale->dcfs_observacao = $request->get('dcfs_observacao');
+            $sale->dcfs_atualizacao = now();
+
+            $sale->save();
+
+            foreach ($request->get('itens') as $item) {
+                $itemsSale = new EDocumentoFiscalItem();
+
+                $itemsSale->dcfs_id = $sale->dcfs_id;
+                $itemsSale->unem_id = Auth::user()->unem_id;
+                $itemsSale->prod_id = $item[0];
+                $itemsSale->dcfs_quantidade = $item['dcfs_quantidade'];
+                $itemsSale->dcfs_valor_unitario = $item['dcfs_valor_unitario'];
+                $itemsSale->dcfs_valor_total = $item['dcfs_valor_total'];
+                $itemsSale->dcfs_atualizacao = now();
+
+                $itemsSale->save();
+            }
+
+            foreach ($request->get('pagamentos') as $payment) {
+                $paymentsSale = new EDocumentoFiscalPagamento();
+                $paymentsSale->dcfs_id = $sale->dcfs_id;
+                $paymentsSale->unem_id = Auth::user()->unem_id;
+                $paymentsSale->usrs_id = Auth::user()->usrs_id;
+                $paymentsSale->frpg_id = $payment;
+
+                $paymentsSale->save();
+            }
+
+            return response()->json(['message' => 'Pedido salvo com sucesso!']);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Erro ao salvar pedido! Detalhes: ' . $th->getMessage()], 500);
         }
     }
 }

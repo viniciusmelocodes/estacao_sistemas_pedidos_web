@@ -1,8 +1,7 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Listagem de Pedidos') }}
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight" id="tituloListagemPedidos">
         </h2>
     </x-slot>
 
@@ -14,19 +13,35 @@
                 onclick="window.location.href='/cadastroPedido'">Novo pedido</button>
         </div>
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 hidden" id="divListagemPedidos">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <div class="flex justify-center" id="divBuscandoPedidos">
-                        <p class="text-lg">Buscando pedidos...</p>
-                    </div>
-                    <div id="wrapper"></div>
+                    <div id="divTableListagemPedidos"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script type="module">
+        getBusinessUnitData()
+
+        const notyf = new Notyf({
+            duration: 3000,
+            position: {
+                x: 'right',
+                y: 'top',
+            },
+            types: [{
+                type: 'warning',
+                background: 'orange',
+            }]
+        });
+
+        notyf.open({
+            type: 'warning',
+            message: '<i class="bi bi-exclamation-circle"></i> Buscando pedidos...',
+        });
+
         function formatDate(dateString) {
             const date = new Date(dateString);
 
@@ -62,7 +77,7 @@
                     ])
                 })
 
-                document.getElementById('divBuscandoPedidos').style.display = 'none';
+                document.getElementById('divListagemPedidos').style.display = 'block';
 
                 const grid = new Grid({
                     columns: [
@@ -73,7 +88,9 @@
                         {
                             name: 'Ações',
                             formatter: (_, row) => html(
-                                `<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" onclick="alert('${row.cells[0].data}')">Editar</button>`
+                                `<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" onclick="window.location.href='/cadastroPedido?id=${row.cells[0].data}'">
+                                    Editar
+                                 </button>`
                             )
                         }
                     ],
@@ -99,11 +116,22 @@
                         'error': 'Ocorreu um erro ao buscar os dados',
                     },
                     data: dataSales
-                }).render(document.getElementById("wrapper"));
+                }).render(document.getElementById("divTableListagemPedidos"));
             })
             .catch(error => {
                 console.log(error)
             })
+
+        
+        function getBusinessUnitData() {
+            axios.get('/getBusinessUnitData')
+                .then((response) => {
+                    $("#tituloListagemPedidos").text('Listagem de Pedidos - ' + response.data.unem_codigo + ' (' + response.data.unem_nome_fantasia + ')');
+                })
+                .catch((err) => {
+                    console.error(err);
+                })
+        }
     </script>
 
 </x-app-layout>

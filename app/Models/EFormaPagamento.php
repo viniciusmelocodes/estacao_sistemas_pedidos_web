@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class EFormaPagamento extends Model
 {
     protected $table = "e_formas_pagamentos";
+
     protected $primaryKey = "frpg_id";
+    
     protected $fillable = [
         'unem_id',
         'frpg_nome',

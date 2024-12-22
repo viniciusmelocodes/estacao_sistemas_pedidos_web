@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class EDocumentoFiscalItem extends Model
 {
-    protected $table = 'e_ddocumentos_fiscais_itens';
+    protected $table = 'e_documentos_fiscais_itens';
+
     protected $primaryKey = 'dfit_id';
+    
     protected $fillable = [
         'dcfs_id',
         'dcfs_id',
