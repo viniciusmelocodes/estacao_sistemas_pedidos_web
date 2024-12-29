@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight" id="tituloCadastroPedido">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight" id="tituloPedido">
         </h2>
     </x-slot>
 
@@ -410,17 +410,17 @@
         function getBusinessUnitData() {
             axios.get('/getBusinessUnitData')
                 .then((response) => {
-                    let textoTituloCadastroPedido = '';
+                    let textoTituloPedido = '';
 
                     if (window.pedidoId != undefined) {
-                        textoTituloCadastroPedido = 'Edição de Pedido - ' + response.data.unem_codigo + ' (' + response
+                        textoTituloPedido = 'Edição de Pedido - ' + response.data.unem_codigo + ' (' + response
                             .data.unem_nome_fantasia + ')';
                     } else {
-                        textoTituloCadastroPedido = 'Novo Pedido - ' + response.data.unem_codigo + ' (' + response.data
+                        textoTituloPedido = 'Novo Pedido - ' + response.data.unem_codigo + ' (' + response.data
                             .unem_nome_fantasia + ')';
                     }
 
-                    $("#tituloCadastroPedido").text(textoTituloCadastroPedido);
+                    $("#tituloPedido").text(textoTituloPedido);
                 })
                 .catch((err) => {
                     console.error(err);

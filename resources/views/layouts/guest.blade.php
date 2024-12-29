@@ -42,7 +42,7 @@
 
 <script>
     @auth
-        window.location.href = '/listagemPedidos';
+        window.location.href = '/pedidos';
     @endauth
 </script>
 

@@ -17,7 +17,7 @@ class HelpersController extends Controller
     public function getAllBusinessUnitsToUserLogged()
     {
         if (!is_null(Auth::user()->unem_id)) {
-            return redirect()->route('listagemPedidos');
+            return redirect()->route('pedidos');
         }
 
         $unems = EUsuarioAcesso::select('unem.*')
@@ -76,7 +76,7 @@ class HelpersController extends Controller
             return redirect()->route('selecaoUnidadeEmpresarial');
         }
 
-        return view('listagemPedidos');
+        return view('pedidos');
     }
 
     public function getNewSale()
@@ -85,7 +85,7 @@ class HelpersController extends Controller
             return redirect()->route('selecaoUnidadeEmpresarial');
         }
 
-        return view('cadastroPedido');
+        return view('pedido');
     }
 
     public function setUnemIdToUserLogged(Request $request)

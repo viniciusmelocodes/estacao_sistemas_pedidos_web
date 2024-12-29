@@ -94,7 +94,7 @@
                 notyf.success('Bem vindo(a), ' + nome + '!');
 
                 setTimeout(() => {
-                    window.location.href = '/listagemPedidos';
+                    window.location.href = '/pedidos';
                 }, 3000);
             })
             .catch(function(error) {
