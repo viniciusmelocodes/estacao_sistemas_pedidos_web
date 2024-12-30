@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\EDocumentoFiscal;
 use App\Models\EDocumentoFiscalItem;
 use App\Models\EDocumentoFiscalPagamento;
+use App\Models\EFormaPagamento;
 use App\Models\EPessoa;
+use App\Models\EProduto;
 use App\Models\EUnidadeEmpresarial;
 use App\Models\EUsuarioAcesso;
 use Illuminate\Http\Request;
@@ -176,6 +178,68 @@ class HelpersController extends Controller
             return response()->json(['message' => 'Pedido salvo com sucesso!']);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Erro ao salvar pedido! Detalhes: ' . $th->getMessage()], 500);
+        }
+    }
+
+    public function getAllPaymentMethods()
+    {
+        try {
+            $paymentMethod = EFormaPagamento::where('unem_id', Auth::user()->unem_id)->orderBy('frpg_nome')->get();
+
+            return response()->json($paymentMethod);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Erro ao buscar formas de pagamento!'], 500);
+        }
+    }
+
+    public function getAllProducts()
+    {
+        try {
+            $data = EProduto::where('unem_id', Auth::user()->unem_id)->orderBy('updated_at')->get();
+
+            $products = [];
+
+            foreach ($data as $produto) {
+                array_push($products, [
+                    'prod_id' => $produto->prod_id,
+                    'unem_id' => $produto->unem_id,
+                    'prod_codigo' => $produto->prod_codigo,
+                    'prod_nome' => $produto->prod_nome,
+                    'prod_marca' => $produto->prod_marca,
+                    'prod_cor' => $produto->prod_cor,
+                    'prod_tamanho' => $produto->prod_tamanho,
+                    'prod_material' => $produto->prod_material,
+                    'prod_gtin' => $produto->prod_gtin,
+                    'prod_referencia' => $produto->prod_referencia,
+                    'prod_ncms' => $produto->prod_ncms,
+                    'prod_genero' => $produto->prod_genero,
+                    'prod_producao' => $produto->prod_producao,
+                    'prod_peso_bruto' => $produto->prod_peso_bruto,
+                    'prod_peso_liquido' => $produto->prod_peso_liquido,
+                    'prod_prazo_entrega' => $produto->prod_prazo_entrega,
+                    'prod_embalagem_altura' => $produto->prod_embalagem_altura,
+                    'prod_embalagem_largura' => $produto->prod_embalagem_largura,
+                    'prod_embalagem_profundidade' => $produto->prod_embalagem_profundidade,
+                    'prod_saldo_estoque' => $produto->prod_saldo_estoque,
+                    'prod_preco_custo' => $produto->prod_preco_custo,
+                    'prod_markup' => $produto->prod_markup,
+                    'prod_preco_varejo' => $produto->prod_preco_varejo,
+                    'prod_preco_atacado' => $produto->prod_preco_atacado,
+                    'prod_modalidade_frete' => $produto->prod_modalidade_frete,
+                    'prod_aliquota_ipi' => $produto->prod_aliquota_ipi,
+                    'prod_aliquota_icms_st' => $produto->prod_aliquota_icms_st,
+                    'prod_aliquota_iss_retido' => $produto->prod_aliquota_iss_retido,
+                    'prod_disponivel' => $produto->prod_disponivel,
+                    'prod_tipo_item' => $produto->prod_tipo_item,
+                    'prod_origem' => $produto->prod_origem,
+                    'prod_movimenta_estoque' => $produto->prod_movimenta_estoque,
+                    "prod_foto" => base64_encode($produto->prod_foto),
+                ]);
+            }
+
+            return response()->json($products);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Erro ao buscar produtos!'], 500);
         }
     }
 }

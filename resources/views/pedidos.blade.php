@@ -142,7 +142,7 @@
                             element.dcfs_numero,
                             dateSale,
                             element.pessoa.pess_apelido_fantasia,
-                            element.dcfs_valor_total,
+                            'R$ ' + element.dcfs_valor_total.replace('.', ','),
                             null
                         ])
                     })

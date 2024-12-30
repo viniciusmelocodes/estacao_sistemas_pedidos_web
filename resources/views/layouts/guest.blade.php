@@ -21,7 +21,7 @@
 <body class="font-sans text-gray-900 antialiased">
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
         @auth
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight mt-44">
                 <i class="bi bi-exclamation-circle"></i> {{ __('Aguarde um momento...') }}
             </h2>
         @else

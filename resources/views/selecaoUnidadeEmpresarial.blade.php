@@ -26,12 +26,12 @@
         <form method="POST" action="{{ route('logout') }}">
             @csrf
 
-            <div class="flex  justify-end">
+            <div class="flex justify-end">
                 <button :href="route('logout')"
                     onclick="event.preventDefault();
                             this.closest('form').submit();"
                     class="bg-sky-400 hover:bg-sky-500 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-sky-800 hover:border-sky-600 rounded">
-                    Sair
+                    Sair do Sistema
                 </button>
             </div>
         </form>
@@ -67,7 +67,7 @@
 <script>
     function selecionarUnidade(id) {
         const nome = '{{ Auth::user()->name }}';
-        
+
         const notyf = new Notyf({
             duration: 10000,
             position: {

@@ -18,6 +18,8 @@ Route::get('/pedido', [HelpersController::class, 'getNewSale'])->middleware(['au
 Route::post('/setUnemIdToUserLogged', [HelpersController::class, 'setUnemIdToUserLogged'])->name('setUnemIdToUserLogged');
 Route::get('/getAllSales', [HelpersController::class, 'getAllSales'])->name('getAllSales');
 Route::get('/getAllPeople', [HelpersController::class, 'getAllPeople'])->name('getAllPeople');
+Route::get('/getAllPaymentMethods', [HelpersController::class, 'getAllPaymentMethods'])->name('getAllPaymentMethods');
+Route::get('/getAllProducts', [HelpersController::class, 'getAllProducts'])->name('getAllProducts');
 Route::get('/getSale', [HelpersController::class, 'getSale'])->name('getSale');
 Route::get('/getBusinessUnitData', [HelpersController::class, 'getBusinessUnitData'])->name('getBusinessUnitData');
 Route::post('/saveSale', [HelpersController::class, 'saveSale'])->name('saveSale');
