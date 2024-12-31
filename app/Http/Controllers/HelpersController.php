@@ -12,7 +12,6 @@ use App\Models\EUnidadeEmpresarial;
 use App\Models\EUsuarioAcesso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Throwable;
 
 class HelpersController extends Controller
 {
@@ -139,7 +138,7 @@ class HelpersController extends Controller
     public function saveSale(Request $request)
     {
         try {
-            dd($request->all());
+            return response()->json($request->all());
 
             $sale = new EDocumentoFiscal();
 

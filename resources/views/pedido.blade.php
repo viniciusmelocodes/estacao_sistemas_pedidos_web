@@ -11,10 +11,10 @@
                     <form class="w-full max-w" action="{{ route('saveSale') }}" method="POST" id="formSaveSale">
                         @csrf
 
-                        <div class="flex flex-wrap -mx-3 mb-6">
+                        <div class="flex flex-wrap -mx-3 mb-2">
                             <!-- Cliente -->
-                            <div class="w-full md:w-1/2 px-3">
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                            <div class="w-full md:w-2/3 px-3">
+                                <label class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2"
                                     for="nomeCliente">
                                     Cliente
                                 </label>
@@ -22,48 +22,33 @@
                                     class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 select2">
                                     <option value="">Selecione um cliente</option>
                                 </select>
-                                <div id="warningCliente" class="text-red-500 text-xs hidden">É necessário selecionar o
+                                <div id="warningCliente" class="text-red-500 text-sm hidden">É necessário selecionar o
                                     cliente.</div>
                             </div>
 
-                            <!-- Forma de pagamento -->
-                            <div class="w-full md:w-1/3 px-3">
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for="pagamento">
-                                    Forma de pagamento
-                                </label>
-                                <select id="opcoesPagamento" name="dfpg_id[]" multiple
-                                    class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 select2">
-                                </select>
-                                <div id="warningFormaPagamento" class="text-red-500 text-xs hidden">É necessário
-                                    selecionar a(s) forma(s) de pagamento.</div>
-                            </div>
-
                             <!-- Tipo de Frete -->
-                            <div class="w-full md:w-1/6 px-3">
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                            <div class="w-full md:w-1/3 px-3" id="divTipoFrete">
+                                <label class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2"
                                     for="frete">
                                     Tipo de Frete
                                 </label>
-                                <select id="tiposDeFrete" name="tipofrete_id"
+                                <select id="modalidadeFrete" name="dcfs_modalidade_frete"
                                     class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 select2">
                                     <option value="">Selecione um tipo de frete</option>
-                                    <option value="0">Contratação do Frete por conta do Remetente (CIF);</option>
-                                    <option value="1">Contratação do Frete por conta do Destinatário (FOB);
-                                    </option>
-                                    <option value="2">Contratação do Frete por conta de Terceiros;</option>
-                                    <option value="3">Transporte Próprio por conta do Remetente;</option>
-                                    <option value="4">Transporte Próprio por conta do Destinatário;</option>
-                                    <option value="9">Sem Ocorrência de Transporte.</option>
+                                    <option value="0">Contratação do Frete por conta do Remetente (CIF)</option>
+                                    <option value="1">Contratação do Frete por conta do Destinatário (FOB)</option>
+                                    <option value="2">Contratação do Frete por conta de Terceiros</option>
+                                    <option value="3">Transporte Próprio por conta do Remetente</option>
+                                    <option value="4">Transporte Próprio por conta do Destinatário</option>
+                                    <option value="9">Sem Ocorrência de Transporte</option>
                                 </select>
-                                <div id="warningTipoFrete" class="text-red-500 text-xs hidden">É necessário selecionar o
+                                <div id="warningTipoFrete" class="text-red-500 text-sm hidden">É necessário selecionar o
                                     tipo de frete.</div>
                             </div>
                         </div>
-
-                        <div class="flex flex-wrap -mx-3 mb-6">
+                        <div class="flex flex-wrap -mx-3 mb-1">
                             <div class="w-full px-3">
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                <label class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2"
                                     for="referencia">
                                     Referência
                                 </label>
@@ -72,14 +57,15 @@
                                     id="referencia" name="dcfs_referencia" type="text">
                             </div>
                         </div>
-                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                        <hr>
+                        <label class="block uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-2">
                             Novo Item
                         </label>
                         <div
                             class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 cursor-pointer">
                             <div class="flex flex-wrap -mx-3 mb-2">
                                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                    <label class="tracking-wide text-gray-700 text-sm font-bold mb-2">
                                         Produto
                                     </label>
                                     <select id="produto" name="prod_id"
@@ -87,22 +73,22 @@
                                         onchange="handleProdutoChange(this)">
                                         <option value="">Selecione um produto</option>
                                     </select>
-                                    <div id="warningProduto" class="text-red-500 text-xs hidden">É necessário selecionar
+                                    <div id="warningProduto" class="text-red-500 text-sm hidden">É necessário selecionar
                                         o produto.</div>
                                 </div>
                                 <div class="w-full md:w-1/12 px-3 mb-6 md:mb-0">
-                                    <label class="tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                    <label class="tracking-wide text-gray-700 text-sm font-bold mb-2">
                                         Qtde
                                     </label>
                                     <input
                                         class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                         id="quantidade" type="number" placeholder="0" min="0" step="0.01">
-                                    <div id="warningQuantidade" class="text-red-500 text-xs hidden">É necessário
+                                    <div id="warningQuantidade" class="text-red-500 text-sm hidden">É necessário
                                         informar a quantidade.</div>
                                 </div>
                                 <div class="w-full md:w-1/6 px-3 mb-6 md:mb-0">
                                     <label id="valorUnitarioProduto"
-                                        class="tracking-wide text-gray-700 text-xl font-bold mb-2">
+                                        class="tracking-wide text-gray-700 text-sm font-bold mb-2">
                                         Valor Unitário
                                     </label>
                                     <input
@@ -111,29 +97,82 @@
                                 </div>
                                 <div class="w-full md:w-1/6 px-3 mb-6 md:mb-0">
                                     <label id="valorTotalProduto"
-                                        class="tracking-wide text-gray-700 text-xl font-bold mb-2">
+                                        class="tracking-wide text-gray-700 text-sm font-bold mb-2">
                                         Total
                                     </label>
                                     <input
                                         class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                         id="valorTotal" type="number" readonly>
                                 </div>
-                                <div class="w-full md:w-1/12 flex items-center justify-start">
+                                <div class="w-full md:w-1/12 flex items-center justify-start" id="divAdicionarItem">
                                     <button id="btnAdicionarItem" type="button"
                                         class="bg-blue-500 hover:bg-blue-400 text-white font-bold mt-6 py-2 px-3 border-b-4 border-blue-700 hover:border-blue-500 rounded">Adicionar</button>
                                 </div>
                             </div>
                         </div>
-                        <br>
-                        <div class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                            <div>Itens</div>
+                        <div class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2 mt-4">
+                            <div>Itens do Pedido</div>
                             <div id="divItens"></div>
-                            <div id="warningItens" class="text-red-500 text-xs hidden">É necessário adicionar itens ao
+                            <div id="warningItens" class="text-red-500 text-sm hidden">É necessário adicionar itens ao
                                 pedido.</div>
+                        </div>
+                        <hr>
+                        <label class="block uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-2">
+                            Nova Forma de Pagamento
+                        </label>
+                        <div
+                            class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 cursor-pointer">
+                            <div class="flex flex-wrap -mx-3 mb-2">
+                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                    <!-- Forma de pagamento -->
+                                    <label class="tracking-wide text-gray-700 text-sm font-bold mb-2" for="pagamento">
+                                        Forma de Pagamento
+                                    </label>
+                                    <select id="formasPagamento" name="dfpg_id"
+                                        class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 select2">
+                                        <option value="">Selecione uma forma de pagamento</option>
+                                    </select>
+                                    <div id="warningFormaPagamento" class="text-red-500 text-sm hidden">É necessário
+                                        selecionar uma forma de pagamento.</div>
+                                </div>
+                                <div class="w-full md:w-1/12 px-3 mb-6 md:mb-0">
+                                    <label class="tracking-wide text-gray-700 text-sm font-bold mb-2">
+                                        Valor
+                                    </label>
+                                    <input
+                                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        id="valorFormaPagmento" type="number" placeholder="0" min="0"
+                                        step="0.01">
+                                    <div id="warningValorFormaPagmento" class="text-red-500 text-sm hidden">É
+                                        necessário informar o valor da forma de pagamento.</div>
+                                </div>
+                                <div class="w-full md:w-4/12 px-3 mb-6 md:mb-0">
+                                    <label class="tracking-wide text-gray-700 text-sm font-bold mb-2">
+                                        Qtde Parcelas
+                                    </label>
+                                    <input
+                                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        id="quantidadeParcelas" type="number" placeholder="0" min="0"
+                                        step="1">
+                                    <div id="warningQuantidadeParcelas" class="text-red-500 text-sm hidden">É
+                                        necessário informar a quantidade de parcelas da forma de pagamento.</div>
+                                </div>
+                                <div class="w-full md:w-1/12 flex items-center justify-start"
+                                    id="divAdicionarFormaPagamento">
+                                    <button id="btnAdicionarFormaPagamento" type="button"
+                                        class="bg-blue-500 hover:bg-blue-400 text-white font-bold mt-6 py-2 px-3 border-b-4 border-blue-700 hover:border-blue-500 rounded">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2 mt-4">
+                            <p>Formas de Pagamento do Pedido</p>
+                            <div id="divFormasPagamento"></div>
+                            <div id="warningFormasPagamento" class="text-red-500 text-sm hidden">É necessário
+                                adicionar formas de pagamento ao pedido.</div>
                         </div>
                         <div class="flex flex-wrap -mx-3 mb-2">
                             <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                <label class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
                                     Valor de Desconto Neste Pedido
                                 </label>
                                 <input
@@ -167,7 +206,7 @@
                         </div>
                         <div class="flex flex-wrap -mx-3 mb-2">
                             <div class="w-full px-3 mb-6 md:mb-0">
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                <label class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
                                     Observações
                                 </label>
                                 <textarea
@@ -197,17 +236,19 @@
             html
         } from "https://unpkg.com/gridjs?module";
 
-        let grid = new Grid();
+        let gridItens = new Grid();
+        let gridFormasPagamento = new Grid();
         window.dataItemsSale = []
+        window.dataPaymentMethods = []
 
         if (window.innerWidth < 600) {
-            grid = new Grid({
+            gridItens = new Grid({
                 columns: [{
                         name: 'ID',
                         hidden: true
                     },
                     {
-                        name: "Produto\nQtde\nValor Unitário\nTotal",
+                        name: "Produto\nQtde\nValor Unit.\nTotal",
                         formatter: (cell, row) => {
                             return html(`<div style="white-space: pre-line;">${cell}</div>`);
                         },
@@ -221,7 +262,7 @@
                     {
                         name: 'Ações',
                         formatter: (_, row) => html(
-                            `<button type="button" data-id="${Math.floor(Math.random() * 100)}" class="removeRowBtn bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-2 mr-2 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                            `<button type="button" data-id="${Math.floor(Math.random() * 100)}" class="btnRemoverItem bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-2 mr-2 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
                             Remover
                          </button>`
                         )
@@ -245,8 +286,53 @@
                 data: window.dataItemsSale,
                 footer: true
             }).render(document.getElementById("divItens"));
+
+            gridFormasPagamento = new Grid({
+                columns: [{
+                        name: 'ID',
+                        hidden: true
+                    },
+                    {
+                        name: "Forma de Pag.\nValor\nQtde Parc.",
+                        formatter: (cell, row) => {
+                            return html(`<div style="white-space: pre-line;">${cell}</div>`);
+                        },
+                        attributes: (cell, row) => {
+                            return {
+                                'data-column-title': 'true',
+                                'style': 'white-space: pre-line;'
+                            };
+                        },
+                    },
+                    {
+                        name: 'Ações',
+                        formatter: (_, row) => html(
+                            `<button type="button" data-id="${Math.floor(Math.random() * 100)}" class="btnRemoverFormaPagamento bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-2 mr-2 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                            Remover
+                         </button>`
+                        )
+                    }
+                ],
+                language: {
+                    'pagination': {
+                        'previous': 'Anterior',
+                        'next': 'Próxima',
+                        'navigate': (page, pages) => `Página ${page} de ${pages}`,
+                        'page': (page) => `Página ${page}`,
+                        'showing': 'Mostrando',
+                        'of': 'de',
+                        'to': 'até',
+                        'results': () => 'resultados',
+                    },
+                    'loading': 'Carregando...',
+                    'noRecordsFound': 'Nenhum registro encontrado',
+                    'error': 'Ocorreu um erro ao buscar os dados',
+                },
+                data: window.dataPaymentMethods,
+                footer: true
+            }).render(document.getElementById("divFormasPagamento"));
         } else {
-            grid = new Grid({
+            gridItens = new Grid({
                 columns: [{
                         name: 'ID',
                         hidden: true
@@ -255,7 +341,7 @@
                     {
                         name: 'Ações',
                         formatter: (_, row) => html(
-                            `<button type="button" data-id="${Math.floor(Math.random() * 100)}" class="removeRowBtn bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-2 mr-2 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                            `<button type="button" data-id="${Math.floor(Math.random() * 100)}" data-total-item="${row.cells[4].data}" class="btnRemoverItem bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-2 mr-2 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
                             Remover
                          </button>`
                         )
@@ -279,6 +365,40 @@
                 data: window.dataItemsSale,
                 footer: true
             }).render(document.getElementById("divItens"));
+
+            gridFormasPagamento = new Grid({
+                columns: [{
+                        name: 'ID',
+                        hidden: true
+                    },
+                    "Forma de Pagamento", "Valor", "Qtde Parcelas",
+                    {
+                        name: 'Ações',
+                        formatter: (_, row) => html(
+                            `<button type="button" data-id="${Math.floor(Math.random() * 100)}" class="btnRemoverFormaPagamento bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-2 mr-2 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                            Remover
+                         </button>`
+                        )
+                    }
+                ],
+                language: {
+                    'pagination': {
+                        'previous': 'Anterior',
+                        'next': 'Próxima',
+                        'navigate': (page, pages) => `Página ${page} de ${pages}`,
+                        'page': (page) => `Página ${page}`,
+                        'showing': 'Mostrando',
+                        'of': 'de',
+                        'to': 'até',
+                        'results': () => 'resultados',
+                    },
+                    'loading': 'Carregando...',
+                    'noRecordsFound': 'Nenhum registro encontrado',
+                    'error': 'Ocorreu um erro ao buscar os dados',
+                },
+                data: window.dataPaymentMethods,
+                footer: true
+            }).render(document.getElementById("divFormasPagamento"));
         }
 
         function calcularTotalQtdeRodape() {
@@ -309,27 +429,28 @@
             document.querySelector('.gridjs-tbody').insertAdjacentHTML('afterend', rodapeHtml);
 
             window.totalQtde = totalQtde;
-            window.total = total;
-            window.descontoPedido = document.getElementById('descontoPedido').value;
+            window.valorTotalPedido = total;
+            window.descontoPedido = document.getElementById('descontoPedido').value == '' ? 0 : parseFloat(document.getElementById('descontoPedido').value);
+            window.valorTotalLiquidoPedido = parseFloat(window.valorTotalPedido - window.descontoPedido);
 
-            $("#labelValorTotalLiquido").text('Valor Total Líquido: R$ ' + (parseFloat(window.total - window.descontoPedido)
+            $("#labelValorTotalLiquido").text('Valor Total Líquido: R$ ' + (parseFloat(window.valorTotalPedido - window.descontoPedido)
                 .toFixed(2)).replace('.', ','));
-            $("#labelValorTotalBruto").text('Valor Total Bruto: R$ ' + (parseFloat(window.total).toFixed(2)).replace('.',
+            $("#labelValorTotalBruto").text('Valor Total Bruto: R$ ' + (parseFloat(window.valorTotalPedido).toFixed(2)).replace('.',
                 ','));
         }
 
         window.calcularTotais = () => {
-            window.descontoPedido = $('#descontoPedido').val();
-            $("#labelValorTotalLiquido").text('Valor Total Líquido: R$ ' + (parseFloat(window.total - window
+            window.descontoPedido = $('#descontoPedido').val() == '' ? 0 : parseFloat($('#descontoPedido').val());
+            window.valorTotalLiquidoPedido = parseFloat(window.valorTotalPedido - window.descontoPedido);
+            $("#labelValorTotalLiquido").text('Valor Total Líquido: R$ ' + (parseFloat(window.valorTotalPedido - window
                 .descontoPedido).toFixed(2)).replace('.', ','));
-            $("#labelValorTotalBruto").text('Valor Total Bruto: R$ ' + (parseFloat(window.total).toFixed(2)).replace(
+            $("#labelValorTotalBruto").text('Valor Total Bruto: R$ ' + (parseFloat(window.valorTotalPedido).toFixed(2)).replace(
                 '.', ','));
         }
 
         window.handleProdutoChange = (select) => {
             const idProduto = select.value;
             const nomeProduto = select.options[select.selectedIndex].text;
-
         }
 
         document.getElementById("btnAdicionarItem").addEventListener("click", () => {
@@ -373,7 +494,7 @@
                 newRow = [
                     idProduto,
                     item,
-                    `<button type="button" class="removeRowBtn bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}" data-total-item="${parseFloat(valorTotal).toFixed(2)}">Remover</button>`
+                    `<button type="button" class="btnRemoverItem bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}" data-total-item="${parseFloat(valorTotal).toFixed(2)}">Remover</button>`
                 ];
             } else {
                 newRow = [
@@ -382,61 +503,133 @@
                     (parseFloat(quantidade).toFixed(2)).replace('.', ','),
                     (parseFloat(valorUnitario).toFixed(2)).replace('.', ','),
                     (parseFloat(valorTotal).toFixed(2)).replace('.', ','),
-                    `<button type="button" class="removeRowBtn bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}" data-total-item="${parseFloat(valorTotal).toFixed(2)}">Remover</button>`
+                    `<button type="button" class="btnRemoverItem bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}" data-total-item="${parseFloat(valorTotal).toFixed(2)}">Remover</button>`
                 ];
             }
 
             window.dataItemsSale.push(newRow);
 
-            grid.updateConfig({
+            gridItens.updateConfig({
                 data: window.dataItemsSale
             }).forceRender();
 
             if (window.innerWidth > 600) {
                 atualizarRodape();
             } else {
-                if (window.total == undefined) {
-                    window.total = 0
+                if (window.valorTotalPedido == undefined) {
+                    window.valorTotalPedido = 0
                 }
 
-                window.total = parseFloat(window.total) + parseFloat(valorTotal)
+                window.valorTotalPedido = parseFloat(window.valorTotalPedido) + parseFloat(valorTotal)
                 calcularTotais()
             }
         });
 
+        document.getElementById("btnAdicionarFormaPagamento").addEventListener("click", () => {
+            const selectElement = document.getElementById('formasPagamento');
+            const idFormaPagamento = selectElement.options[selectElement.selectedIndex].value;
+            const nomeFormaPagamento = selectElement.options[selectElement.selectedIndex].text;
+
+            let isValid = true;
+            $("#warningFormaPagamento").addClass('hidden');
+            $("#warningValorFormaPagmento").addClass('hidden');
+            $("#warningQuantidadeParcelas").addClass('hidden');
+
+            if (idFormaPagamento == "") {
+                $("#warningFormaPagamento").removeClass('hidden')
+                isValid = false
+            }
+
+            if (document.getElementById('valorFormaPagmento').value == "" || parseFloat(document.getElementById(
+                    'valorFormaPagmento').value) < 0.01) {
+                $("#warningValorFormaPagmento").removeClass('hidden')
+                isValid = false
+            }
+
+            if (document.getElementById('quantidadeParcelas').value == "") {
+                $("#warningQuantidadeParcelas").removeClass('hidden')
+                isValid = false
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            let newRow = 0
+
+            let valorFormaPagmento = document.getElementById('valorFormaPagmento').value
+            let quantidadeParcelas = document.getElementById('quantidadeParcelas').value
+
+            if (window.innerWidth < 600) {
+                let item = nomeFormaPagamento + ' / R$ ' + (parseFloat(valorFormaPagmento).toFixed(2)).replace('.',
+                        ',') + ' / ' +
+                    quantidadeParcelas
+
+                newRow = [
+                    idFormaPagamento,
+                    item,
+                    `<button type="button" class="btnRemoverFormaPagamento bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}">Remover</button>`
+                ];
+            } else {
+                newRow = [
+                    idFormaPagamento,
+                    nomeFormaPagamento,
+                    'R$ ' + (parseFloat(valorFormaPagmento).toFixed(2)).replace('.', ','),
+                    quantidadeParcelas,
+                    `<button type="button" class="btnRemoverFormaPagamento bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}">Remover</button>`
+                ];
+            }
+
+            window.dataPaymentMethods.push(newRow);
+
+            gridFormasPagamento.updateConfig({
+                data: window.dataPaymentMethods
+            }).forceRender();
+        });
+
         document.addEventListener("click", function(event) {
-            if (event.target.classList.contains("removeRowBtn")) {
-                const rowIndex = Array.from(document.querySelectorAll(".removeRowBtn")).indexOf(event.target);
+            if (event.target.classList.contains("btnRemoverItem")) {
+                const rowIndex = Array.from(document.querySelectorAll(".btnRemoverItem")).indexOf(event.target);
 
                 if (rowIndex > -1) {
                     let tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = window.dataItemsSale[rowIndex][2];
+                    let column = window.innerWidth > 600 ? 5 : 2;
+                    tempDiv.innerHTML = window.dataItemsSale[rowIndex][column];
                     const button = tempDiv.querySelector('button');
                     const totalItemRemovido = parseFloat(button.getAttribute('data-total-item'));
 
                     window.dataItemsSale.splice(rowIndex, 1);
 
-                    grid.updateConfig({
+                    gridItens.updateConfig({
                         data: window.dataItemsSale
                     }).forceRender();
 
                     if (window.innerWidth > 600) {
                         atualizarRodape();
                     } else {
-                        if (window.total == undefined) {
-                            window.total = 0
+                        if (window.valorTotalPedido == undefined) {
+                            window.valorTotalPedido = 0
                         }
 
-                        window.total = parseFloat(window.total) - parseFloat(totalItemRemovido)
+                        window.valorTotalPedido = parseFloat(window.valorTotalPedido) - parseFloat(totalItemRemovido)
                         calcularTotais()
                     }
                 }
             }
         });
 
-        grid.on('ready', function() {
-            if (window.innerWidth > 600) {
-                atualizarRodape();
+        document.addEventListener("click", function(event) {
+            if (event.target.classList.contains("btnRemoverFormaPagamento")) {
+                const rowIndex = Array.from(document.querySelectorAll(".btnRemoverFormaPagamento")).indexOf(event
+                    .target);
+
+                if (rowIndex > -1) {
+                    window.dataPaymentMethods.splice(rowIndex, 1);
+
+                    gridFormasPagamento.updateConfig({
+                        data: window.dataPaymentMethods
+                    }).forceRender();
+                }
             }
         });
 
@@ -461,6 +654,18 @@
                 let selectedOption = e.params.data;
                 let valorUnitario = $(selectedOption.element).data('valor-unitario');
                 $('#valorUnitario').val(valorUnitario);
+            });
+
+            $('#formasPagamento').on('select2:select', function(e) {
+                let selectedOption = e.params.data;
+                let qtdeParcelas = $(selectedOption.element).data('qtde-parcelas');
+                if (qtdeParcelas == 1) {
+                    $('#quantidadeParcelas').attr("disabled", true);
+                    $('#quantidadeParcelas').val(1)
+                } else {
+                    $('#quantidadeParcelas').attr("disabled", false);
+                    $('#quantidadeParcelas').val('')
+                }
             });
 
             $("#quantidade").on('input', function() {
@@ -503,6 +708,12 @@
             if (window.innerWidth > 600) {
                 $("#labelValorTotalLiquido").parent().addClass('mt-8')
                 $("#labelValorTotalBruto").parent().addClass('mt-8')
+            } else {
+                $("#divTipoFrete").addClass('mt-2')
+                $("#divAdicionarItem").removeClass('justify-start')
+                $("#divAdicionarItem").addClass('justify-center')
+                $("#divAdicionarFormaPagamento").removeClass('justify-start')
+                $("#divAdicionarFormaPagamento").addClass('justify-center')
             }
         }
 
@@ -533,6 +744,8 @@
         }
 
         function handlePaymentMethod() {
+            $('#formasPagamento').select2()
+
             axios.get('/getAllPaymentMethods')
                 .then(function(response) {
                     const data = response.data;
@@ -544,13 +757,11 @@
                         });
                     }
 
-                    const options = data.map(item => ({
-                        id: item.frpg_id,
-                        text: item.frpg_nome
-                    }));
-
-                    $('#opcoesPagamento').select2({
-                        data: options
+                    data.forEach(function(paymentMethod) {
+                        var newOption = new Option(paymentMethod.frpg_nome, paymentMethod.frpg_id, false,
+                        false);
+                        $(newOption).attr('data-qtde-parcelas', paymentMethod.frpg_parcelas);
+                        $('#formasPagamento').append(newOption).trigger('change');
                     });
                 })
                 .catch(function(error) {
@@ -639,24 +850,25 @@
                 $("#warningFormaPagamento").addClass('hidden')
                 $("#warningTipoFrete").addClass('hidden')
                 $("#warningItens").addClass('hidden')
+                $("#warningFormasPagamento").addClass('hidden')
 
                 if ($('[name="pess_id"] option:selected').val() == '') {
                     $("#warningCliente").removeClass('hidden')
                     isValid = false;
                 }
 
-                if ($('[name="dfpg_id[]"]').val() == '') {
-                    $("#warningFormaPagamento").removeClass('hidden')
-                    isValid = false;
-                }
-
-                if ($('[name="tipofrete_id"] option:selected').val() == '') {
+                if ($('[name="dcfs_modalidade_frete"] option:selected').val() == '') {
                     $("#warningTipoFrete").removeClass('hidden')
                     isValid = false;
                 }
 
                 if (window.dataItemsSale.length == 0) {
                     $("#warningItens").removeClass('hidden')
+                    isValid = false;
+                }
+
+                if (window.dataPaymentMethods.length == 0) {
+                    $("#warningFormasPagamento").removeClass('hidden')
                     isValid = false;
                 }
 
@@ -667,12 +879,15 @@
                     });
                 } else {
                     axios.post('/saveSale', {
-                            data: {
-                                pess_id: $('[name="pess_id"] option:selected').val(),
-                                dfpg_id: $('[name="dfpg_id[]"]').val(),
-                                tipofrete_id: $('[name="tipofrete_id"] option:selected').val(),
-                                itens: window.dataItemsSale,
-                            }
+                            pess_id: $('[name="pess_id"] option:selected').val(),
+                            dfpg_id: $('[name="dfpg_id[]"]').val(),
+                            dcfs_modalidade_frete: $('[name="dcfs_modalidade_frete"] option:selected')
+                                .val(),
+                            itens: window.dataItemsSale,
+                            formas_pagamento: window.dataPaymentMethods,
+                            valor_desconto: window.descontoPedido,
+                            valor_total_liquido: window.valorTotalLiquidoPedido,
+                            valor_total_bruto: window.valorTotalPedido,
                         })
                         .then((response) => {
                             console.log(response.data);

@@ -44,6 +44,7 @@ class EDocumentoFiscal extends Model
         'dcfs_valor_total_servico',
         'dcfs_valor_total_custos',
         'dcfs_referencia',
+        'dcfs_modalidade_frete',
         'dcfs_observacao',
         'dcfs_processamento',
         'dcfs_processamento_data',
