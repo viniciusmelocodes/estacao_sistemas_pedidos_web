@@ -430,13 +430,16 @@
 
             window.totalQtde = totalQtde;
             window.valorTotalPedido = total;
-            window.descontoPedido = document.getElementById('descontoPedido').value == '' ? 0 : parseFloat(document.getElementById('descontoPedido').value);
+            window.descontoPedido = document.getElementById('descontoPedido').value == '' ? 0 : parseFloat(document
+                .getElementById('descontoPedido').value);
             window.valorTotalLiquidoPedido = parseFloat(window.valorTotalPedido - window.descontoPedido);
 
-            $("#labelValorTotalLiquido").text('Valor Total Líquido: R$ ' + (parseFloat(window.valorTotalPedido - window.descontoPedido)
+            $("#labelValorTotalLiquido").text('Valor Total Líquido: R$ ' + (parseFloat(window.valorTotalPedido - window
+                    .descontoPedido)
                 .toFixed(2)).replace('.', ','));
-            $("#labelValorTotalBruto").text('Valor Total Bruto: R$ ' + (parseFloat(window.valorTotalPedido).toFixed(2)).replace('.',
-                ','));
+            $("#labelValorTotalBruto").text('Valor Total Bruto: R$ ' + (parseFloat(window.valorTotalPedido).toFixed(2))
+                .replace('.',
+                    ','));
         }
 
         window.calcularTotais = () => {
@@ -444,8 +447,9 @@
             window.valorTotalLiquidoPedido = parseFloat(window.valorTotalPedido - window.descontoPedido);
             $("#labelValorTotalLiquido").text('Valor Total Líquido: R$ ' + (parseFloat(window.valorTotalPedido - window
                 .descontoPedido).toFixed(2)).replace('.', ','));
-            $("#labelValorTotalBruto").text('Valor Total Bruto: R$ ' + (parseFloat(window.valorTotalPedido).toFixed(2)).replace(
-                '.', ','));
+            $("#labelValorTotalBruto").text('Valor Total Bruto: R$ ' + (parseFloat(window.valorTotalPedido).toFixed(2))
+                .replace(
+                    '.', ','));
         }
 
         window.handleProdutoChange = (select) => {
@@ -474,6 +478,12 @@
 
             if (!isValid) {
                 return;
+            } else {
+                window.dataItemsSale.forEach(row => {
+                    if (row[0] == idProduto) {
+                        console.log(row)
+                    }
+                })
             }
 
             let newRow = 0
@@ -611,7 +621,8 @@
                             window.valorTotalPedido = 0
                         }
 
-                        window.valorTotalPedido = parseFloat(window.valorTotalPedido) - parseFloat(totalItemRemovido)
+                        window.valorTotalPedido = parseFloat(window.valorTotalPedido) - parseFloat(
+                            totalItemRemovido)
                         calcularTotais()
                     }
                 }
@@ -759,7 +770,7 @@
 
                     data.forEach(function(paymentMethod) {
                         var newOption = new Option(paymentMethod.frpg_nome, paymentMethod.frpg_id, false,
-                        false);
+                            false);
                         $(newOption).attr('data-qtde-parcelas', paymentMethod.frpg_parcelas);
                         $('#formasPagamento').append(newOption).trigger('change');
                     });
@@ -786,6 +797,8 @@
                     data.forEach(function(product) {
                         var newOption = new Option(product.prod_nome, product.prod_id, false, false);
                         $(newOption).attr('data-valor-unitario', product.prod_preco_varejo);
+                        $(newOption).attr('data-aliquota-ipi', product.prod_aliquota_ipi);
+                        $(newOption).attr('data-aliquota-icms-st', product.prod_aliquota_icms_st);
                         $('#produto').append(newOption).trigger('change');
                     });
                 })
