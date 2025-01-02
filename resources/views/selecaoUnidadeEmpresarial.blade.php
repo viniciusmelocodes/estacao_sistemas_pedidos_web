@@ -60,6 +60,10 @@
                     </div>
                 </div>
             @endforeach
+
+            @if (count($unems) == 0)
+                <p class="text-black dark:text-white text-lg font-medium">Revise os dados de acesso do usuário atual para continuar...</p>
+            @endif
         </div>
     </div>
 </body>
