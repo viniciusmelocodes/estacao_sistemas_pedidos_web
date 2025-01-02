@@ -135,7 +135,7 @@
                                     <div id="warningFormaPagamento" class="text-red-500 text-sm hidden">É necessário
                                         selecionar uma forma de pagamento.</div>
                                 </div>
-                                <div class="w-full md:w-1/12 px-3 mb-6 md:mb-0">
+                                <div class="w-full md:w-2/12 px-3 mb-6 md:mb-0">
                                     <label class="tracking-wide text-gray-700 text-sm font-bold mb-2">
                                         Valor
                                     </label>
@@ -146,7 +146,7 @@
                                     <div id="warningValorFormaPagamento" class="text-red-500 text-sm hidden">É
                                         necessário informar o valor da forma de pagamento.</div>
                                 </div>
-                                <div class="w-full md:w-4/12 px-3 mb-6 md:mb-0">
+                                <div class="w-full md:w-3/12 px-3 mb-6 md:mb-0">
                                     <label class="tracking-wide text-gray-700 text-sm font-bold mb-2">
                                         Qtde Parcelas
                                     </label>
@@ -170,7 +170,8 @@
                             <div id="warningFormasPagamento" class="text-red-500 text-sm hidden">É necessário
                                 adicionar formas de pagamento ao pedido.</div>
                         </div>
-                        <div class="flex flex-wrap -mx-3 mb-2">
+                        <hr>
+                        <div class="flex flex-wrap -mx-3 mt-4 mb-2">
                             <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                 <label class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
                                     Valor de Desconto Neste Pedido
@@ -514,7 +515,21 @@
         }
 
         window.calcularTotais = () => {
+            if (window.valorTotalPedido == undefined) {
+                window.valorTotalPedido = 0
+            }
+
             window.descontoPedido = $('#descontoPedido').val() == '' ? 0 : parseFloat($('#descontoPedido').val());
+
+            let valorTotalPedido = 0;
+
+            window.dataItemsSale.forEach(item => {
+                let arr = item[1].split(' / ');
+                valorTotalPedido += parseFloat(arr[1]) * parseFloat(arr[2]);
+            })
+
+            window.valorTotalPedido = valorTotalPedido
+
             window.valorTotalLiquidoPedido = parseFloat(window.valorTotalPedido - window.descontoPedido);
             $("#labelValorTotalLiquido").text('Valor Total Líquido: R$ ' + (parseFloat(window.valorTotalPedido - window
                 .descontoPedido).toFixed(2)).replace('.', ','));
@@ -556,7 +571,7 @@
                 window.dataItemsSale.forEach(row => {
                     if (row[0] == idProduto) {
                         Swal.fire({
-                            text: 'Produto já adicionado ao pedido! Deseja alterar a quantidade?',
+                            text: 'Produto já adicionado ao pedido! Deseja substituí-lo por este?',
                             icon: 'question',
                             confirmButtonText: 'Sim',
                             denyButtonText: 'Não',
@@ -567,18 +582,12 @@
                                     if (row[0] == idProduto) {
                                         let arrayItem = row[1].split(" / ");
 
-                                        let quantidadeItem = parseInt(arrayItem[1]) +
-                                            parseInt(
-                                                quantidade);
-                                        let valorTotalItem = parseFloat(arrayItem[2]) +
-                                            parseFloat(valorTotal);
-
                                         row[1] = nomeProduto + " / " + (parseFloat(
-                                                quantidadeItem).toFixed(2)).replace('.',
+                                                quantidade).toFixed(2)).replace('.',
                                                 ',') +
                                             " / " + (parseFloat(valorUnitario).toFixed(2))
                                             .replace('.', ',') + " / " + (parseFloat(
-                                                valorTotalItem).toFixed(2)).replace('.',
+                                                valorTotal).toFixed(2)).replace('.',
                                                 ',');
 
                                         $("#produto").val("").trigger("change");
@@ -593,13 +602,6 @@
                                         if (window.innerWidth > 600) {
                                             atualizarRodape();
                                         } else {
-                                            if (window.valorTotalPedido == undefined) {
-                                                window.valorTotalPedido = 0
-                                            }
-
-                                            window.valorTotalPedido = parseFloat(window
-                                                .valorTotalPedido) + parseFloat(
-                                                valorTotal)
                                             calcularTotais()
                                         }
                                     }
@@ -611,61 +613,45 @@
                     }
                 })
             } else {
-                // window.dataItemsSale.forEach(row => {
-                //     if (row[0] == idProduto) {
-                //         Swal.fire({
-                //             text: 'Produto já adicionado ao pedido! Deseja alterar a quantidade?',
-                //             icon: 'question',
-                //             confirmButtonText: 'Sim',
-                //             denyButtonText: 'Não',
-                //             showDenyButton: true,
-                //         }).then((result) => {
-                //             if (result.isConfirmed) {
-                //                 window.dataItemsSale.forEach(row => {
-                //                     if (row[0] == idProduto) {
-                //                         let arrayItem = row[1].split(" / ");
+                window.dataItemsSale.forEach(row => {
+                    if (row[0] == idProduto) {
+                        Swal.fire({
+                            text: 'Produto já adicionado ao pedido! Deseja substituí-lo por este?',
+                            icon: 'question',
+                            confirmButtonText: 'Sim',
+                            denyButtonText: 'Não',
+                            showDenyButton: true,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.dataItemsSale.forEach(row => {
+                                    if (row[0] == idProduto) {
+                                        row[2] = (parseFloat(quantidade).toFixed(2))
+                                            .replace('.', ',');
+                                        row[4] = (parseFloat(valorTotal).toFixed(2))
+                                            .replace('.', ',');
 
-                //                         let quantidadeItem = parseInt(arrayItem[1]) + parseInt(
-                //                             quantidade);
-                //                         let valorTotalItem = parseFloat(arrayItem[2]) +
-                //                             parseFloat(valorTotal);
+                                        $("#produto").val("").trigger("change")
+                                        $("#quantidade").val("")
+                                        $("#valorUnitario").val("")
+                                        $("#valorTotal").val("")
 
-                //                         row[1] = nomeProduto + " / " + (parseFloat(
-                //                                 quantidadeItem).toFixed(2)).replace('.', ',') +
-                //                             " / " + (parseFloat(valorUnitario).toFixed(2))
-                //                             .replace('.', ',') + " / " + (parseFloat(
-                //                                 valorTotalItem).toFixed(2)).replace('.', ',');
+                                        gridItens.updateConfig({
+                                            data: window.dataItemsSale
+                                        }).forceRender();
 
-                //                         $("#produto").val("").trigger("change");
-                //                         $("#quantidade").val("")
-                //                         $("#valorUnitario").val("")
-                //                         $("#valorTotal").val("")
+                                        if (window.innerWidth > 600) {
+                                            atualizarRodape();
+                                        } else {
+                                            calcularTotais()
+                                        }
+                                    }
+                                })
+                            }
+                        })
 
-                //                         gridItens.updateConfig({
-                //                             data: window.dataItemsSale
-                //                         }).forceRender();
-
-                //                         if (window.innerWidth > 600) {
-                //                             atualizarRodape();
-                //                         } else {
-                //                             if (window.valorTotalPedido == undefined) {
-                //                                 window.valorTotalPedido = 0
-                //                             }
-
-                //                             window.valorTotalPedido = parseFloat(window
-                //                                 .valorTotalPedido) + parseFloat(valorTotal)
-                //                             calcularTotais()
-                //                         }
-                //                     }
-                //                 })
-                //             }
-                //         })
-
-                //         isValid = false
-                //     }
-                // })
-
-                alert('Implementar para tamanho de tela maior que 600px');
+                        isValid = false
+                    }
+                })
             }
 
             if (!isValid) {
@@ -714,11 +700,6 @@
             if (window.innerWidth > 600) {
                 atualizarRodape();
             } else {
-                if (window.valorTotalPedido == undefined) {
-                    window.valorTotalPedido = 0
-                }
-
-                window.valorTotalPedido = parseFloat(window.valorTotalPedido) + parseFloat(valorTotal)
                 calcularTotais()
             }
         });
@@ -753,38 +734,74 @@
             let quantidadeParcelas = document.getElementById('quantidadeParcelas').value
 
             // Formas de pagamento repetidos não podem ser adicionados
-            window.dataPaymentMethods.forEach(row => {
-                if (row[0] == idFormaPagamento) {
-                    Swal.fire({
-                        text: 'Forma de Pagamento já adicionada ao pedido! Deseja alterá-la?',
-                        icon: 'question',
-                        confirmButtonText: 'Sim',
-                        denyButtonText: 'Não',
-                        showDenyButton: true,
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.dataPaymentMethods.forEach(row => {
-                                if (row[0] == idFormaPagamento) {
-                                    row[1] = nomeFormaPagamento + " / R$ " + (parseFloat(
-                                            valorFormaPagamento).toFixed(2)).replace('.',
-                                            ',') + " / " +
-                                        parseInt(quantidadeParcelas);
+            if (window.innerWidth < 600) {
+                window.dataPaymentMethods.forEach(row => {
+                    if (row[0] == idFormaPagamento) {
+                        Swal.fire({
+                            text: 'Forma de Pagamento já adicionada ao pedido! Deseja alterá-la?',
+                            icon: 'question',
+                            confirmButtonText: 'Sim',
+                            denyButtonText: 'Não',
+                            showDenyButton: true,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.dataPaymentMethods.forEach(row => {
+                                    if (row[0] == idFormaPagamento) {
+                                        row[1] = nomeFormaPagamento + " / R$ " + (
+                                                parseFloat(
+                                                    valorFormaPagamento).toFixed(2))
+                                            .replace('.',
+                                                ',') + " / " +
+                                            quantidadeParcelas;
 
-                                    $("#formasPagamento").val("").trigger("change");
-                                    $("#valorFormaPagamento").val("")
-                                    $("#quantidadeParcelas").val("")
+                                        $("#formasPagamento").val("").trigger("change");
+                                        $("#valorFormaPagamento").val("")
+                                        $("#quantidadeParcelas").val("")
 
-                                    gridFormasPagamento.updateConfig({
-                                        data: window.dataPaymentMethods
-                                    }).forceRender();
-                                }
-                            })
-                        }
-                    })
+                                        gridFormasPagamento.updateConfig({
+                                            data: window.dataPaymentMethods
+                                        }).forceRender();
+                                    }
+                                })
+                            }
+                        })
 
-                    isValid = false
-                }
-            })
+                        isValid = false
+                    }
+                })
+            } else {
+                window.dataPaymentMethods.forEach(row => {
+                    if (row[0] == idFormaPagamento) {
+                        Swal.fire({
+                            text: 'Forma de Pagamento já adicionada ao pedido! Deseja alterá-la?',
+                            icon: 'question',
+                            confirmButtonText: 'Sim',
+                            denyButtonText: 'Não',
+                            showDenyButton: true,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.dataPaymentMethods.forEach(row => {
+                                    if (row[0] == idFormaPagamento) {
+                                        row[2] = 'R$ ' + (parseFloat(valorFormaPagamento)
+                                            .toFixed(2)).replace('.', ',');
+                                        row[3] = quantidadeParcelas;
+
+                                        $("#formasPagamento").val("").trigger("change");
+                                        $("#valorFormaPagamento").val("")
+                                        $("#quantidadeParcelas").val("")
+
+                                        gridFormasPagamento.updateConfig({
+                                            data: window.dataPaymentMethods
+                                        }).forceRender();
+                                    }
+                                })
+                            }
+                        })
+
+                        isValid = false
+                    }
+                })
+            }
 
             if (!isValid) {
                 return;
@@ -848,12 +865,6 @@
                     if (window.innerWidth > 600) {
                         atualizarRodape();
                     } else {
-                        if (window.valorTotalPedido == undefined) {
-                            window.valorTotalPedido = 0
-                        }
-
-                        window.valorTotalPedido = parseFloat(window.valorTotalPedido) - parseFloat(
-                            totalItemRemovido)
                         calcularTotais()
                     }
                 }
@@ -1074,9 +1085,9 @@
                     isValid = false;
                 }
 
-                if (window.innerWidth < 600) {
-                    let valorTotalFormaPagamento = 0
+                let valorTotalFormaPagamento = 0
 
+                if (window.innerWidth < 600) {
                     window.dataPaymentMethods.forEach(row => {
                         let arrayFormaPagamento = row[1].split(" / ");
                         valorTotalFormaPagamento += parseFloat(arrayFormaPagamento[1].replace(',', '.')
@@ -1090,27 +1101,32 @@
                         isValid = false;
                     }
                 } else {
-                    // window.dataPaymentMethods.forEach(row => {
-                    //     let arrayFormaPagamento = row[1].split(" / ");
-                    //     console.log(arrayFormaPagamento)
+                    window.dataPaymentMethods.forEach(row => {
+                        valorTotalFormaPagamento += parseFloat(row[2].replace(',', '.')
+                            .replace('R$ ', ''))
+                    })
 
-                    //     let valorTotalFormaPagamento = parseFloat(arrayFormaPagamento[2]) +
-                    //         parseFloat(valorTotal);
-
-                    //     // valorTotal = valorTotalItem;
-                    // })
-
-                    // isValid = false;
-
-                    alert('Implementar para tamanho de tela maior que 600px');
+                    if (valorTotalFormaPagamento > 0 && valorTotalFormaPagamento != window
+                        .valorTotalLiquidoPedido) {
+                        messagePaymentMethods =
+                            'O valor total das formas de pagamento não corresponde ao valor total do pedido.';
+                        isValid = false;
+                    }
                 }
 
                 if (!isValid) {
                     window.notyf.open({
                         type: 'warning',
+                        duration: messagePaymentMethods != '' ? 6000 : 3000,
                         message: `<i class="bi bi-exclamation-circle"></i> ${messagePaymentMethods != '' ? messagePaymentMethods : message}`,
                     });
                 } else {
+                    window.notyf.open({
+                        type: 'warning',
+                        duration: 5000,
+                        message: '<i class="bi bi-exclamation-circle"></i>Aguarde um momento que estamos concluindo o seu pedido...',
+                    });
+
                     axios.post('/saveSale', {
                             pess_id: $('[name="pess_id"] option:selected').val(),
                             dfpg_id: $('[name="dfpg_id[]"]').val(),
@@ -1124,6 +1140,13 @@
                         })
                         .then((response) => {
                             console.log(response.data);
+
+                            window.notyf.dismissAll();
+                            window.notyf.open({
+                                type: 'success',
+                                duration: 3000,
+                                message: 'Pedido concluído com sucesso!',
+                            });
                         }).catch((err) => {
                             console.error(err);
                         });
