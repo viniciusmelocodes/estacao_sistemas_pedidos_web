@@ -62,7 +62,7 @@ class EDocumentoFiscal extends Model
         return $this->hasMany(EDocumentoFiscalItem::class, 'dcfs_id');
     }
 
-    public function pagamentos()
+    public function formasPagamento()
     {
         return $this->hasMany(EDocumentoFiscalPagamento::class, 'dcfs_id');
     }

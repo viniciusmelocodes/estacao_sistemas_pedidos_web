@@ -70,7 +70,7 @@
                         const dateSale = formatDate(element.dcfs_data_emissao)
 
                         dataSales.push([
-                            element.dcfs_numero,
+                            element.dcfs_id,
                             'Nº: ' + element.dcfs_numero + " / " + dateSale + " / " + element.pessoa
                             .pess_apelido_fantasia + " / R$ " + element.dcfs_valor_total.replace('.',
                                 ','),

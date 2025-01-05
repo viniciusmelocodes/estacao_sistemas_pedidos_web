@@ -128,7 +128,7 @@ class HelpersController extends Controller
     public function getSale(Request $request)
     {
         try {
-            $sale = EDocumentoFiscal::with(['pessoa', 'itens', 'pagamentos'])->where('dcfs_id', $request->get('id'))->first();
+            $sale = EDocumentoFiscal::with(['pessoa', 'itens', 'formasPagamento'])->where('dcfs_id', $request->get('id'))->first();
 
             return response()->json($sale);
         } catch (\Throwable $th) {

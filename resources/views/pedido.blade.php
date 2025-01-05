@@ -898,6 +898,7 @@
                 window.notyf.open({
                     type: 'warning',
                     message: '<i class="bi bi-exclamation-circle"></i> Carregando pedido...',
+                    duration: 10000,
                 });
 
                 getSale(window.pedidoId)
@@ -1025,7 +1026,25 @@
                     }
                 })
                 .then((response) => {
-                    console.log(response.data);
+                    setTimeout(() => {
+                        $("#cliente").val(response.data.pess_id).trigger('change');
+                        $("#modalidadeFrete").val(response.data.dcfs_modalidade_frete).trigger('change');
+                        $("#referencia").val(response.data.dcfs_referencia);
+
+                        // Itens
+                        let itens = response.data.itens;
+
+                        // Formas de Pagamento
+                        let formasPagamento = response.data.formas_pagamento;
+
+                        let valorTotalBruto = parseFloat(response.data.dcfs_valor_total);
+                        let valorTotalDesconto = parseFloat(response.data.dcfs_valor_desconto);
+                        let valorTotalLiquido = parseFloat(valorTotalBruto - valorTotalDesconto);
+
+                        $("#descontoPedido").val(valorTotalDesconto);
+                        $("#labelValorTotalLiquido").text(`Valor Total Líquido: R$ ${valorTotalLiquido.toFixed(2).replace('.', ',')}`);
+                        $("#labelValorTotalBruto").text(`Valor Total Bruto: R$ ${valorTotalBruto.toFixed(2).replace('.', ',')}`);
+                    }, 8000);
                 }).catch((err) => {
                     console.error(err);
                 });
