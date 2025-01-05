@@ -141,7 +141,11 @@ class HelpersController extends Controller
         try {
             DB::beginTransaction();
 
-            $sale = new EDocumentoFiscal();
+            if ($request->get('id')) {
+                $sale = EDocumentoFiscal::where('dcfs_id', $request->get('id'))->first();
+            } else {
+                $sale = new EDocumentoFiscal();
+            }
 
             $sale->pess_id = $request->get('pess_id');
             $sale->unem_id = Auth::user()->unem_id;

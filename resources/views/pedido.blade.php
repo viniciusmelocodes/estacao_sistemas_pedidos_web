@@ -11,6 +11,7 @@
                     <form class="w-full max-w" action="{{ route('saveSale') }}" method="POST" id="formSaveSale">
                         @csrf
 
+                        <input type="hidden" name="id" id="id" value="0">
                         <div class="flex flex-wrap -mx-3 mb-2">
                             <!-- Cliente -->
                             <div class="w-full md:w-2/3 px-3">
@@ -590,6 +591,8 @@
                                                 valorTotal).toFixed(2)).replace('.',
                                                 ',');
 
+                                        $("#warningItens").addClass('hidden')
+
                                         $("#produto").val("").trigger("change");
                                         $("#quantidade").val("")
                                         $("#valorUnitario").val("")
@@ -629,6 +632,8 @@
                                             .replace('.', ',');
                                         row[4] = (parseFloat(valorTotal).toFixed(2))
                                             .replace('.', ',');
+
+                                        $("#warningItens").addClass('hidden')
 
                                         $("#produto").val("").trigger("change")
                                         $("#quantidade").val("")
@@ -682,6 +687,8 @@
             }
 
             window.dataItemsSale.push(newRow);
+
+            $("#warningItens").addClass('hidden')
 
             window.notyf.open({
                 type: 'success',
@@ -754,6 +761,8 @@
                                                 ',') + " / " +
                                             quantidadeParcelas;
 
+                                        $("#warningFormasPagamento").addClass('hidden')
+
                                         $("#formasPagamento").val("").trigger("change");
                                         $("#valorFormaPagamento").val("")
                                         $("#quantidadeParcelas").val("")
@@ -785,6 +794,8 @@
                                         row[2] = 'R$ ' + (parseFloat(valorFormaPagamento)
                                             .toFixed(2)).replace('.', ',');
                                         row[3] = quantidadeParcelas;
+
+                                        $("#warningFormasPagamento").addClass('hidden')
 
                                         $("#formasPagamento").val("").trigger("change");
                                         $("#valorFormaPagamento").val("")
@@ -830,6 +841,8 @@
             }
 
             window.dataPaymentMethods.push(newRow);
+
+            $("#warningFormasPagamento").addClass('hidden')
 
             window.notyf.open({
                 type: 'success',
@@ -1027,6 +1040,7 @@
                 })
                 .then((response) => {
                     setTimeout(() => {
+                        $("#id").val(response.data.dcfs_id);
                         $("#cliente").val(response.data.pess_id).trigger('change');
                         $("#modalidadeFrete").val(response.data.dcfs_modalidade_frete).trigger('change');
                         $("#referencia").val(response.data.dcfs_referencia);
@@ -1147,6 +1161,7 @@
                     });
 
                     axios.post('/saveSale', {
+                            id: $("#id").val(),
                             mobile: window.innerWidth < 600 ? true : false,
                             pess_id: $('[name="pess_id"] option:selected').val(),
                             dcfs_modalidade_frete: $('[name="dcfs_modalidade_frete"] option:selected')
@@ -1159,8 +1174,6 @@
                             valor_total_bruto: window.valorTotalPedido,
                         })
                         .then((response) => {
-                            // console.log(response.data);
-
                             window.notyf.open({
                                 type: 'success',
                                 duration: 3000,
