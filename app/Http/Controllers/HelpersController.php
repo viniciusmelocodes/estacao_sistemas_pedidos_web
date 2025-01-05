@@ -12,6 +12,7 @@ use App\Models\EUnidadeEmpresarial;
 use App\Models\EUsuarioAcesso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HelpersController extends Controller
 {
@@ -138,44 +139,89 @@ class HelpersController extends Controller
     public function saveSale(Request $request)
     {
         try {
-            return response()->json($request->all());
+            DB::beginTransaction();
 
             $sale = new EDocumentoFiscal();
 
             $sale->pess_id = $request->get('pess_id');
             $sale->unem_id = Auth::user()->unem_id;
             $sale->usrs_id = Auth::user()->usrs_id;
+
+            $sale->muni_id = 1;
+            $sale->dcfs_numero = rand(1, 999);
+            $sale->dcfs_entr_cep = '74000000';
+
+            $sale->dcfs_data_emissao = now();
+            $sale->dcfs_referencia = $request->get('dcfs_referencia');
+            $sale->dcfs_modalidade_frete = $request->get('dcfs_modalidade_frete');
+            $sale->dcfs_valor = $request->get('valor_total_bruto');
+            $sale->dcfs_valor_desconto = $request->get('valor_desconto');
+            $sale->dcfs_valor_total = $request->get('valor_total_liquido');
             $sale->dcfs_observacao = $request->get('dcfs_observacao');
+            $sale->dcfs_estacao = 'pedido_web';
             $sale->dcfs_atualizacao = now();
 
             $sale->save();
 
+            // Itens
             foreach ($request->get('itens') as $item) {
                 $itemsSale = new EDocumentoFiscalItem();
 
+                if ($request->get('mobile')) {
+                    $itemData = explode(' / ', $item[1]);
+                    $quantity = floatval($itemData[1]);
+                    $priceUnit = floatval($itemData[2]);
+                    $total = floatval($itemData[3]);
+                } else {
+                    $quantity = floatval($item[2]);
+                    $priceUnit = floatval($item[3]);
+                    $total = floatval($item[4]);
+                }
+
                 $itemsSale->dcfs_id = $sale->dcfs_id;
                 $itemsSale->unem_id = Auth::user()->unem_id;
+                $itemsSale->usrs_id = Auth::user()->usrs_id;
                 $itemsSale->prod_id = $item[0];
-                $itemsSale->dcfs_quantidade = $item['dcfs_quantidade'];
-                $itemsSale->dcfs_valor_unitario = $item['dcfs_valor_unitario'];
-                $itemsSale->dcfs_valor_total = $item['dcfs_valor_total'];
-                $itemsSale->dcfs_atualizacao = now();
+                $itemsSale->dfit_quantidade = $quantity;
+                $itemsSale->dfit_valor_unitario = $priceUnit;
+                $itemsSale->dfit_valor_total_bruto = $total;
+                $itemsSale->dfit_estacao = 'pedido_web';
+                $itemsSale->dfit_atualizacao = now();
 
                 $itemsSale->save();
             }
 
-            foreach ($request->get('pagamentos') as $payment) {
+            // Formas de pagamento
+            foreach ($request->get('formas_pagamento') as $payment) {
                 $paymentsSale = new EDocumentoFiscalPagamento();
+
+                if ($request->get('mobile')) {
+                    $itemData = explode(' / ', $payment[1]);
+                    $value = floatval(str_replace('R$ ', '', $itemData[1]));
+                    $quantity = floatval($itemData[2]);
+                } else {
+                    $value = floatval(str_replace('R$ ', '', $payment[1]));
+                    $quantity = floatval($payment[2]);
+                }
+
                 $paymentsSale->dcfs_id = $sale->dcfs_id;
                 $paymentsSale->unem_id = Auth::user()->unem_id;
                 $paymentsSale->usrs_id = Auth::user()->usrs_id;
-                $paymentsSale->frpg_id = $payment;
+                $paymentsSale->frpg_id = $payment[0];
+                $paymentsSale->dfpg_primeira_parcela = now();
+                $paymentsSale->dfpg_quantidade_parcelas = $quantity;
+                $paymentsSale->dfpg_valor = $value;
+                $paymentsSale->dfpg_estacao = 'pedido_web';
+                $paymentsSale->dfpg_atualizacao = now();
 
                 $paymentsSale->save();
             }
 
+            DB::commit();
+
             return response()->json(['message' => 'Pedido salvo com sucesso!']);
         } catch (\Throwable $th) {
+            DB::rollBack();
             return response()->json(['message' => 'Erro ao salvar pedido! Detalhes: ' . $th->getMessage()], 500);
         }
     }

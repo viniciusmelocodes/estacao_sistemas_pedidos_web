@@ -9,9 +9,10 @@ class EDocumentoFiscalItem extends Model
     protected $table = 'e_documentos_fiscais_itens';
 
     protected $primaryKey = 'dfit_id';
+
+    public $timestamps = false;
     
     protected $fillable = [
-        'dcfs_id',
         'dcfs_id',
         'unem_id',
         'usrs_id',

@@ -10,6 +10,8 @@ class EDocumentoFiscalPagamento extends Model
 
     protected $primaryKey = "dfpg_id";
 
+    public $timestamps = false;
+
     protected $fillable = [
         'dcfs_id',
         'unem_id',

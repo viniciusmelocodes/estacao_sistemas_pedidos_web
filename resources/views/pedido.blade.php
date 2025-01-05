@@ -128,7 +128,7 @@
                                     <label class="tracking-wide text-gray-700 text-sm font-bold mb-2" for="pagamento">
                                         Forma de Pagamento
                                     </label>
-                                    <select id="formasPagamento" name="dfpg_id"
+                                    <select id="formasPagamento"
                                         class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 select2">
                                         <option value="">Selecione uma forma de pagamento</option>
                                     </select>
@@ -1124,14 +1124,15 @@
                     window.notyf.open({
                         type: 'warning',
                         duration: 5000,
-                        message: '<i class="bi bi-exclamation-circle"></i>Aguarde um momento que estamos concluindo o seu pedido...',
+                        message: '<i class="bi bi-exclamation-circle"></i> Aguarde um momento que estamos concluindo o seu pedido...',
                     });
 
                     axios.post('/saveSale', {
+                            mobile: window.innerWidth < 600 ? true : false,
                             pess_id: $('[name="pess_id"] option:selected').val(),
-                            dfpg_id: $('[name="dfpg_id[]"]').val(),
                             dcfs_modalidade_frete: $('[name="dcfs_modalidade_frete"] option:selected')
                                 .val(),
+                            dcfs_referencia: $('[name="dcfs_referencia"]').val(),
                             itens: window.dataItemsSale,
                             formas_pagamento: window.dataPaymentMethods,
                             valor_desconto: window.descontoPedido,
@@ -1139,14 +1140,17 @@
                             valor_total_bruto: window.valorTotalPedido,
                         })
                         .then((response) => {
-                            console.log(response.data);
+                            // console.log(response.data);
 
-                            window.notyf.dismissAll();
                             window.notyf.open({
                                 type: 'success',
                                 duration: 3000,
                                 message: 'Pedido concluído com sucesso!',
                             });
+
+                            setTimeout(() => {
+                                window.location.href = '/pedidos';
+                            }, 3000);
                         }).catch((err) => {
                             console.error(err);
                         });
