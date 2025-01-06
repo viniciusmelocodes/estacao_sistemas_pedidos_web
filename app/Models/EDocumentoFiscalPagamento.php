@@ -25,4 +25,8 @@ class EDocumentoFiscalPagamento extends Model
         'dfpg_atualizacao',
         'dfpg_estacao'
     ];
+
+    public function formaPagamento() {
+        return $this->belongsTo(EFormaPagamento::class, 'frpg_id');
+    }
 }

@@ -43,4 +43,9 @@ class EDocumentoFiscalItem extends Model
         'dfit_atualizacao',
         'dfit_estacao'
     ];
+
+    public function produto()
+    {
+        return $this->belongsTo(EProduto::class, 'prod_id');
+    }
 }

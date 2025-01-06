@@ -339,6 +339,10 @@
                             Remover
                          </button>`
                         )
+                    },
+                    {
+                        name: 'dfit_id',
+                        hidden: true
                     }
                 ],
                 language: {
@@ -384,6 +388,10 @@
                             Remover
                          </button>`
                         )
+                    },
+                    {
+                        name: 'dfpg_id',
+                        hidden: true
                     }
                 ],
                 language: {
@@ -418,6 +426,10 @@
                             Remover
                          </button>`
                         )
+                    },
+                    {
+                        name: 'dfit_id',
+                        hidden: true
                     }
                 ],
                 language: {
@@ -452,6 +464,10 @@
                             Remover
                          </button>`
                         )
+                    },
+                    {
+                        name: 'dfpg_id',
+                        hidden: true
                     }
                 ],
                 language: {
@@ -663,29 +679,7 @@
                 return;
             }
 
-            let newRow = 0
-
-            if (window.innerWidth < 600) {
-                let item = nomeProduto + ' / ' + (parseFloat(quantidade).toFixed(2)).replace('.', ',') + ' / ' +
-                    (parseFloat(valorUnitario).toFixed(2)).replace('.', ',') + ' / ' +
-                    (parseFloat(valorTotal).toFixed(2)).replace('.', ',')
-
-                newRow = [
-                    idProduto,
-                    item,
-                    `<button type="button" class="btnRemoverItem bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}" data-total-item="${parseFloat(valorTotal).toFixed(2)}">Remover</button>`
-                ];
-            } else {
-                newRow = [
-                    idProduto,
-                    nomeProduto,
-                    (parseFloat(quantidade).toFixed(2)).replace('.', ','),
-                    (parseFloat(valorUnitario).toFixed(2)).replace('.', ','),
-                    (parseFloat(valorTotal).toFixed(2)).replace('.', ','),
-                    `<button type="button" class="btnRemoverItem bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}" data-total-item="${parseFloat(valorTotal).toFixed(2)}">Remover</button>`
-                ];
-            }
-
+            let newRow = handleNewItemGrid(idProduto, nomeProduto, quantidade, valorUnitario, valorTotal, 0)
             window.dataItemsSale.push(newRow);
 
             $("#warningItens").addClass('hidden')
@@ -818,28 +812,7 @@
                 return;
             }
 
-            let newRow = 0
-
-            if (window.innerWidth < 600) {
-                let item = nomeFormaPagamento + ' / R$ ' + (parseFloat(valorFormaPagamento).toFixed(2)).replace('.',
-                        ',') + ' / ' +
-                    quantidadeParcelas
-
-                newRow = [
-                    idFormaPagamento,
-                    item,
-                    `<button type="button" class="btnRemoverFormaPagamento bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}">Remover</button>`
-                ];
-            } else {
-                newRow = [
-                    idFormaPagamento,
-                    nomeFormaPagamento,
-                    'R$ ' + (parseFloat(valorFormaPagamento).toFixed(2)).replace('.', ','),
-                    quantidadeParcelas,
-                    `<button type="button" class="btnRemoverFormaPagamento bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}">Remover</button>`
-                ];
-            }
-
+            let newRow = handleNewPaymentMethodGrid(idFormaPagamento, nomeFormaPagamento, valorFormaPagamento, quantidadeParcelas, 0)
             window.dataPaymentMethods.push(newRow);
 
             $("#warningFormasPagamento").addClass('hidden')
@@ -1046,10 +1019,41 @@
                         $("#referencia").val(response.data.dcfs_referencia);
 
                         // Itens
-                        let itens = response.data.itens;
+                        window.dataItemsSale = [];
+
+                        response.data.itens.forEach(function(item) {
+                            let idProduto = item.prod_id;
+                            let nomeProduto = item.produto.prod_nome;
+                            let quantidade = item.dfit_quantidade;
+                            let valorUnitario = item.dfit_valor_unitario;
+                            let valorTotal = item.dfit_valor_total_bruto
+                            let newRow = handleNewItemGrid(idProduto, nomeProduto, quantidade, valorUnitario, valorTotal, item.dfit_id)
+                            window.dataItemsSale.push(newRow);
+                        })
+
+                        gridItens.updateConfig({
+                            data: window.dataItemsSale
+                        }).forceRender();
+
+                        if (window.innerWidth > 600) {
+                            atualizarRodape();
+                        }
 
                         // Formas de Pagamento
-                        let formasPagamento = response.data.formas_pagamento;
+                        window.dataPaymentMethods = [];
+
+                        response.data.formas_pagamento.forEach(function(formaPagamento) {
+                            let idFormaPagamento = formaPagamento.frpg_id;
+                            let nomeFormaPagamento = formaPagamento.forma_pagamento.frpg_nome;
+                            let valorFormaPagamento = formaPagamento.dfpg_valor
+                            let quantidadeParcelas = formaPagamento.dfpg_quantidade_parcelas;
+                            let newRow = handleNewPaymentMethodGrid(idFormaPagamento, nomeFormaPagamento, valorFormaPagamento, quantidadeParcelas, formaPagamento.dfpg_id)
+                            window.dataPaymentMethods.push(newRow);
+                        })
+
+                        gridFormasPagamento.updateConfig({
+                            data: window.dataPaymentMethods
+                        }).forceRender();
 
                         let valorTotalBruto = parseFloat(response.data.dcfs_valor_total);
                         let valorTotalDesconto = parseFloat(response.data.dcfs_valor_desconto);
@@ -1188,6 +1192,63 @@
                         });
                 }
             })
+        }
+
+        function handleNewItemGrid(idProduto, nomeProduto, quantidade, valorUnitario, valorTotal, dfitId) {
+            let newRow = [];
+
+            if (window.innerWidth < 600) {
+                let item = nomeProduto + ' / ' + (parseFloat(quantidade).toFixed(2)).replace('.', ',') + ' / ' +
+                    (parseFloat(valorUnitario).toFixed(2)).replace('.', ',') + ' / ' +
+                    (parseFloat(valorTotal).toFixed(2)).replace('.', ',')
+
+                newRow = [
+                    idProduto,
+                    item,
+                    `<button type="button" class="btnRemoverItem bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}" data-total-item="${parseFloat(valorTotal).toFixed(2)}">Remover</button>`,
+                    dfitId
+                ];
+            } else {
+                newRow = [
+                    idProduto,
+                    nomeProduto,
+                    (parseFloat(quantidade).toFixed(2)).replace('.', ','),
+                    (parseFloat(valorUnitario).toFixed(2)).replace('.', ','),
+                    (parseFloat(valorTotal).toFixed(2)).replace('.', ','),
+                    `<button type="button" class="btnRemoverItem bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}" data-total-item="${parseFloat(valorTotal).toFixed(2)}">Remover</button>`,
+                    dfitId
+                ];
+            }
+
+            return newRow;
+        }
+
+        function handleNewPaymentMethodGrid(idFormaPagamento, nomeFormaPagamento, valorFormaPagamento, quantidadeParcelas, dfpgId) {
+            let newRow = [];
+
+            if (window.innerWidth < 600) {
+                let item = nomeFormaPagamento + ' / R$ ' + (parseFloat(valorFormaPagamento).toFixed(2)).replace('.',
+                        ',') + ' / ' +
+                    quantidadeParcelas
+
+                newRow = [
+                    idFormaPagamento,
+                    item,
+                    `<button type="button" class="btnRemoverFormaPagamento bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}">Remover</button>`,
+                    dfpgId
+                ];
+            } else {
+                newRow = [
+                    idFormaPagamento,
+                    nomeFormaPagamento,
+                    'R$ ' + (parseFloat(valorFormaPagamento).toFixed(2)).replace('.', ','),
+                    quantidadeParcelas,
+                    `<button type="button" class="btnRemoverFormaPagamento bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-3 mr-16 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" data-id="${Math.floor(Math.random() * 100)}">Remover</button>`,
+                    dfpgId
+                ];
+            }
+
+            return newRow;
         }
     </script>
 </x-app-layout>

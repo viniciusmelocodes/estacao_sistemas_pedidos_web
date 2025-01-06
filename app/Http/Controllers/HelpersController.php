@@ -128,7 +128,7 @@ class HelpersController extends Controller
     public function getSale(Request $request)
     {
         try {
-            $sale = EDocumentoFiscal::with(['pessoa', 'itens', 'formasPagamento'])->where('dcfs_id', $request->get('id'))->first();
+            $sale = EDocumentoFiscal::with(['pessoa', 'itens', 'formasPagamento', 'itens.produto', 'formasPagamento.formaPagamento'])->where('dcfs_id', $request->get('id'))->first();
 
             return response()->json($sale);
         } catch (\Throwable $th) {
@@ -169,17 +169,23 @@ class HelpersController extends Controller
 
             // Itens
             foreach ($request->get('itens') as $item) {
-                $itemsSale = new EDocumentoFiscalItem();
-
                 if ($request->get('mobile')) {
                     $itemData = explode(' / ', $item[1]);
                     $quantity = floatval($itemData[1]);
                     $priceUnit = floatval($itemData[2]);
                     $total = floatval($itemData[3]);
+                    $dfitId = $item[3];
                 } else {
                     $quantity = floatval($item[2]);
                     $priceUnit = floatval($item[3]);
                     $total = floatval($item[4]);
+                    $dfitId = $item[6];
+                }
+
+                if ($dfitId > 0) {
+                    $itemsSale = EDocumentoFiscalItem::where('dfit_id', $dfitId)->first();
+                } else {
+                    $itemsSale = new EDocumentoFiscalItem();
                 }
 
                 $itemsSale->dcfs_id = $sale->dcfs_id;
@@ -197,15 +203,21 @@ class HelpersController extends Controller
 
             // Formas de pagamento
             foreach ($request->get('formas_pagamento') as $payment) {
-                $paymentsSale = new EDocumentoFiscalPagamento();
-
                 if ($request->get('mobile')) {
                     $itemData = explode(' / ', $payment[1]);
                     $value = floatval(str_replace('R$ ', '', $itemData[1]));
                     $quantity = floatval($itemData[2]);
+                    $dfpgId = $payment[3];
                 } else {
                     $value = floatval(str_replace('R$ ', '', $payment[1]));
                     $quantity = floatval($payment[2]);
+                    $dfpgId = $payment[4];
+                }
+
+                if ($dfpgId > 0) {
+                    $paymentsSale = EDocumentoFiscalPagamento::where('dfpg_id', $dfpgId)->first();
+                } else {
+                    $paymentsSale = new EDocumentoFiscalPagamento();
                 }
 
                 $paymentsSale->dcfs_id = $sale->dcfs_id;
