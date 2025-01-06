@@ -317,7 +317,7 @@
         if (window.innerWidth < 600) {
             gridItens = new Grid({
                 columns: [{
-                        name: 'ID',
+                        name: 'prod_id',
                         hidden: true
                     },
                     {
@@ -366,7 +366,7 @@
 
             gridFormasPagamento = new Grid({
                 columns: [{
-                        name: 'ID',
+                        name: 'frpg_id',
                         hidden: true
                     },
                     {
@@ -415,7 +415,7 @@
         } else {
             gridItens = new Grid({
                 columns: [{
-                        name: 'ID',
+                        name: 'prod_id',
                         hidden: true
                     },
                     "Produto", "Qtde", "Valor Unitário", "Total",
@@ -453,7 +453,7 @@
 
             gridFormasPagamento = new Grid({
                 columns: [{
-                        name: 'ID',
+                        name: 'frpg_id',
                         hidden: true
                     },
                     "Forma de Pagamento", "Valor", "Qtde Parcelas",
