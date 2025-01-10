@@ -219,8 +219,8 @@
                         <div class="py-4">
                             <div class="flex justify-end">
                                 <button
-                                    class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 mr-28 px-4 border-b-4 border-green-700 hover:border-blue-500 rounded"
-                                    type="button" id="btnNovoPedido">
+                                    class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 mr-28 px-4 border-b-4 border-green-700 hover:border-blue-500 rounded hidden"
+                                    type="button" onclick="goToNewPedido()" id="btnNovoPedido">
                                     Novo Pedido
                                 </button>
                                 <button
@@ -1018,6 +1018,7 @@
                 })
                 .then((response) => {
                     setTimeout(() => {
+                        $("#btnNovoPedido").removeClass('hidden');
                         $("#id").val(response.data.dcfs_id);
                         $("#cliente").val(response.data.pess_id).trigger('change');
                         $("#modalidadeFrete").val(response.data.dcfs_modalidade_frete).trigger('change');
@@ -1067,7 +1068,13 @@
                         $("#descontoPedido").val(valorTotalDesconto);
                         $("#labelValorTotalLiquido").text(`Valor Total Líquido: R$ ${valorTotalLiquido.toFixed(2).replace('.', ',')}`);
                         $("#labelValorTotalBruto").text(`Valor Total Bruto: R$ ${valorTotalBruto.toFixed(2).replace('.', ',')}`);
-                    }, 3000);
+
+                        window.notyf.open({
+                            type: 'success',
+                            message: 'Pedido carregado com sucesso!',
+                            duration: 3000,
+                        });
+                    }, 2000);
                 }).catch((err) => {
                     console.error(err);
                 });
@@ -1254,6 +1261,21 @@
             }
 
             return newRow;
+        }
+
+        window.goToNewPedido = () => {
+            Swal.fire({
+                title: 'Deseja criar novo pedido?',
+                icon: 'question',
+                showDenyButton: true,
+                denyButtonText: 'Não',
+                showConfirmButton: true,
+                confirmButtonText: 'Sim',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/pedido';
+                }
+            })
         }
     </script>
 </x-app-layout>
