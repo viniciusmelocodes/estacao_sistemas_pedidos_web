@@ -188,7 +188,7 @@
                                 'results': () => 'resultados',
                             },
                             'loading': 'Carregando...',
-                            'noRecordsFound': 'Nenhum registro encontrado',
+                            'noRecordsFound': 'Nenhum pedido encontrado',
                             'error': 'Ocorreu um erro ao buscar os dados',
                         },
                         data: dataSales

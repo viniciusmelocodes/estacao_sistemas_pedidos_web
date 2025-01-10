@@ -106,7 +106,7 @@ class HelpersController extends Controller
     public function getAllSales()
     {
         try {
-            $sales = EDocumentoFiscal::with(['pessoa'])->orderBy('dcfs_atualizacao', 'desc')->get();
+            $sales = EDocumentoFiscal::with(['pessoa'])->where('unem_id', Auth::user()->unem_id)->orderBy('dcfs_atualizacao', 'desc')->get();
 
             return response()->json($sales);
         } catch (\Throwable $th) {
