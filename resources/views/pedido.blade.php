@@ -1069,6 +1069,10 @@
                         $("#labelValorTotalLiquido").text(`Valor Total Líquido: R$ ${valorTotalLiquido.toFixed(2).replace('.', ',')}`);
                         $("#labelValorTotalBruto").text(`Valor Total Bruto: R$ ${valorTotalBruto.toFixed(2).replace('.', ',')}`);
 
+                        window.descontoPedido = valorTotalDesconto;
+                        window.valorTotalLiquidoPedido = valorTotalLiquido;
+                        window.valorTotalPedido = valorTotalBruto;
+
                         window.notyf.open({
                             type: 'success',
                             message: 'Pedido carregado com sucesso!',
@@ -1176,32 +1180,7 @@
                         message: '<i class="bi bi-exclamation-circle"></i> Aguarde um momento que estamos concluindo o seu pedido...',
                     });
 
-                    axios.post('/saveSale', {
-                            id: $("#id").val(),
-                            mobile: window.innerWidth < 600 ? true : false,
-                            pess_id: $('[name="pess_id"] option:selected').val(),
-                            dcfs_modalidade_frete: $('[name="dcfs_modalidade_frete"] option:selected')
-                                .val(),
-                            dcfs_referencia: $('[name="dcfs_referencia"]').val(),
-                            itens: window.dataItemsSale,
-                            formas_pagamento: window.dataPaymentMethods,
-                            valor_desconto: window.descontoPedido,
-                            valor_total_liquido: window.valorTotalLiquidoPedido,
-                            valor_total_bruto: window.valorTotalPedido,
-                        })
-                        .then((response) => {
-                            window.notyf.open({
-                                type: 'success',
-                                duration: 3000,
-                                message: 'Pedido concluído com sucesso!',
-                            });
-
-                            setTimeout(() => {
-                                window.location.href = '/pedidos';
-                            }, 3000);
-                        }).catch((err) => {
-                            console.error(err);
-                        });
+                    saveSale();
                 }
             })
         }
@@ -1276,6 +1255,35 @@
                     window.location.href = '/pedido';
                 }
             })
+        }
+
+        function saveSale() {
+            axios.post('/saveSale', {
+                id: $("#id").val(),
+                mobile: window.innerWidth < 600 ? true : false,
+                pess_id: $('[name="pess_id"] option:selected').val(),
+                dcfs_modalidade_frete: $('[name="dcfs_modalidade_frete"] option:selected')
+                    .val(),
+                dcfs_referencia: $('[name="dcfs_referencia"]').val(),
+                itens: window.dataItemsSale,
+                formas_pagamento: window.dataPaymentMethods,
+                valor_desconto: window.descontoPedido,
+                valor_total_liquido: window.valorTotalLiquidoPedido,
+                valor_total_bruto: window.valorTotalPedido,
+            })
+            .then((response) => {
+                window.notyf.open({
+                    type: 'success',
+                    duration: 3000,
+                    message: 'Pedido concluído com sucesso!',
+                });
+
+                setTimeout(() => {
+                    window.location.href = '/pedidos';
+                }, 3000);
+            }).catch((err) => {
+                console.error(err);
+            });
         }
     </script>
 </x-app-layout>
