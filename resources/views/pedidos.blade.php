@@ -139,6 +139,7 @@
                         const dateSale = formatDate(element.dcfs_data_emissao)
 
                         dataSales.push([
+                            element.dcfs_id,
                             element.dcfs_numero,
                             dateSale,
                             element.pessoa.pess_apelido_fantasia,
@@ -151,6 +152,10 @@
 
                     const grid = new Grid({
                         columns: [
+                            {
+                                name: 'ID',
+                                hidden: true
+                            },
                             "Nº Pedido",
                             "Data",
                             "Nome/Razão Social/Fantasia",

@@ -141,7 +141,7 @@ class HelpersController extends Controller
         try {
             DB::beginTransaction();
 
-            if ($request->get('id')) {
+            if ($request->get('id') > 0) {
                 $sale = EDocumentoFiscal::where('dcfs_id', $request->get('id'))->first();
             } else {
                 $sale = new EDocumentoFiscal();
@@ -209,9 +209,9 @@ class HelpersController extends Controller
                     $quantity = floatval($itemData[2]);
                     $dfpgId = $payment[3];
                 } else {
-                    $value = floatval(str_replace('R$ ', '', $payment[1]));
-                    $quantity = floatval($payment[2]);
-                    $dfpgId = $payment[4];
+                    $value = floatval(str_replace('R$ ', '', $payment[2]));
+                    $quantity = floatval($payment[3]);
+                    $dfpgId = $payment[5];
                 }
 
                 if ($dfpgId > 0) {
@@ -238,7 +238,7 @@ class HelpersController extends Controller
             return response()->json(['message' => 'Pedido salvo com sucesso!']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['message' => 'Erro ao salvar pedido! Detalhes: ' . $th->getMessage()], 500);
+            return response()->json(['message' => 'Erro ao salvar pedido! Detalhes: ' . $th->getMessage() . ', Linha: ' . $th->getLine()], 500);
         }
     }
 

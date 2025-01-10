@@ -219,7 +219,12 @@
                         <div class="py-4">
                             <div class="flex justify-end">
                                 <button
-                                    class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mr-18 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+                                    class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 mr-28 px-4 border-b-4 border-green-700 hover:border-blue-500 rounded"
+                                    type="button" id="btnNovoPedido">
+                                    Novo Pedido
+                                </button>
+                                <button
+                                    class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
                                     type="submit">
                                     Concluir Pedido
                                 </button>
@@ -884,7 +889,7 @@
                 window.notyf.open({
                     type: 'warning',
                     message: '<i class="bi bi-exclamation-circle"></i> Carregando pedido...',
-                    duration: 10000,
+                    duration: 3000,
                 });
 
                 getSale(window.pedidoId)
@@ -1062,7 +1067,7 @@
                         $("#descontoPedido").val(valorTotalDesconto);
                         $("#labelValorTotalLiquido").text(`Valor Total Líquido: R$ ${valorTotalLiquido.toFixed(2).replace('.', ',')}`);
                         $("#labelValorTotalBruto").text(`Valor Total Bruto: R$ ${valorTotalBruto.toFixed(2).replace('.', ',')}`);
-                    }, 8000);
+                    }, 3000);
                 }).catch((err) => {
                     console.error(err);
                 });
