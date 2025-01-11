@@ -80,6 +80,15 @@
 
                     document.getElementById('divPedidos').style.display = 'block';
 
+                    const fuse = new Fuse(dataSales, {
+                        keys: ['Nº Pedido Data Nome/Razão Social/Fantasia Valor Total', 'Ações'],
+                        shouldSort: true,
+                        includeScore: true,
+                        threshold: 0.3,
+                        ignoreLocation: true,
+                        ignoreFieldNorm: true
+                    });
+
                     const grid = new Grid({
                         columns: [{
                                 name: 'ID',
@@ -109,7 +118,12 @@
                             }
                         ],
                         sort: true,
-                        search: true,
+                        search: {
+                            custom: (query, rows) => {
+                                const results = fuse.search(query);
+                                return results.map(result => result.item);
+                            }
+                        },
                         pagination: {
                             enabled: true,
                             limit: 5
@@ -150,9 +164,17 @@
 
                     document.getElementById('divPedidos').style.display = 'block';
 
+                    const fuse = new Fuse(dataSales, {
+                        keys: ['Nº Pedido', 'Data', 'Nome/Razão Social/Fantasia', 'Valor Total', 'Ações'],
+                        shouldSort: true,
+                        includeScore: true,
+                        threshold: 0.3,
+                        ignoreLocation: true,
+                        ignoreFieldNorm: true
+                    });
+
                     const grid = new Grid({
-                        columns: [
-                            {
+                        columns: [{
                                 name: 'ID',
                                 hidden: true
                             },
@@ -171,7 +193,12 @@
                             }
                         ],
                         sort: true,
-                        search: true,
+                        search: {
+                            custom: (query, rows) => {
+                                const results = fuse.search(query);
+                                return results.map(result => result.item);
+                            }
+                        },
                         pagination: true,
                         language: {
                             'search': {
