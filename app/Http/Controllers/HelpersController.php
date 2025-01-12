@@ -103,14 +103,41 @@ class HelpersController extends Controller
         }
     }
 
-    public function getAllSales()
+    public function getSalesByTermSearch(Request $request)
     {
         try {
-            $sales = EDocumentoFiscal::with(['pessoa'])->where('unem_id', Auth::user()->unem_id)->orderBy('dcfs_atualizacao', 'desc')->get();
+            $search = $request->get('search');
+            $searchNumeric = $search == '' ? 0 : $search;
+
+            if (is_null($search)) {
+                $sales = EDocumentoFiscal::with(['pessoa'])
+                    ->where('unem_id', Auth::user()->unem_id)
+                    ->orderBy('dcfs_atualizacao', 'desc')
+                    ->limit(50)
+                    ->get();
+            } else {
+                $sales = EDocumentoFiscal::with(['pessoa'])
+                    ->join('e_pessoas as pessoas', 'pessoas.pess_id', '=', 'e_documentos_fiscais.pess_id')
+                    ->where('e_documentos_fiscais.unem_id', Auth::user()->unem_id)
+                    ->whereRaw('pessoas.pess_nome_razao_social like "%' . $search . '%"')
+                    ->union(
+                        EDocumentoFiscal::with(['pessoa'])
+                            ->join('e_pessoas as pessoas', 'pessoas.pess_id', '=', 'e_documentos_fiscais.pess_id')
+                            ->where('e_documentos_fiscais.unem_id', Auth::user()->unem_id)
+                            ->whereRaw('(e_documentos_fiscais.dcfs_numero like "%' . $searchNumeric . '%"
+                                OR DATE_FORMAT(e_documentos_fiscais.dcfs_data_emissao, "%d") = "' . $searchNumeric . '"
+                                OR DATE_FORMAT(e_documentos_fiscais.dcfs_data_emissao, "%d/%m") = "' . $searchNumeric . '"
+                                OR DATE_FORMAT(e_documentos_fiscais.dcfs_data_emissao, "%d/%m/%Y") = "' . $searchNumeric . '"
+                                OR DATE_FORMAT(e_documentos_fiscais.dcfs_data_emissao, "%Y") = "' . $searchNumeric . '"
+                                OR e_documentos_fiscais.dcfs_valor_total = "' . $searchNumeric . '")')
+                    )
+                    ->limit(50)
+                    ->get();
+            }
 
             return response()->json($sales);
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'Erro ao buscar pedidos!'], 500);
+            return response()->json(['message' => 'Erro ao buscar pedidos! Detalhes: ' . $th->getMessage()], 500);
         }
     }
 

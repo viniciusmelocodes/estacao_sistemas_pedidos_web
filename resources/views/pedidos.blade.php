@@ -13,7 +13,7 @@
                 onclick="window.location.href='/pedido'">Novo</button>
         </div>
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 hidden" id="divPedidos">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div id="divTablePedidos"></div>
@@ -24,23 +24,6 @@
 
     <script type="module">
         getBusinessUnitData()
-
-        const notyf = new Notyf({
-            duration: 3000,
-            position: {
-                x: 'right',
-                y: 'top',
-            },
-            types: [{
-                type: 'warning',
-                background: 'orange',
-            }]
-        });
-
-        notyf.open({
-            type: 'warning',
-            message: '<i class="bi bi-exclamation-circle"></i> Buscando pedidos...',
-        });
 
         function formatDate(dateString) {
             const date = new Date(dateString);
@@ -61,168 +44,140 @@
             html
         } from "https://unpkg.com/gridjs?module";
 
-        let dataSales = []
-
-        axios.get('/getAllSales')
-            .then(response => {
-                if (window.innerWidth < 880) {
-                    response.data.forEach(element => {
-                        const dateSale = formatDate(element.dcfs_data_emissao)
-
-                        dataSales.push([
-                            element.dcfs_id,
-                            'Nº: ' + element.dcfs_numero + " / " + dateSale + " / " + element.pessoa
-                            .pess_apelido_fantasia + " / R$ " + element.dcfs_valor_total.replace('.',
-                                ','),
-                            null
-                        ])
-                    })
-
-                    document.getElementById('divPedidos').style.display = 'block';
-
-                    const fuse = new Fuse(dataSales, {
-                        keys: ['Nº Pedido Data Nome/Razão Social/Fantasia Valor Total', 'Ações'],
-                        shouldSort: true,
-                        includeScore: true,
-                        threshold: 0.3,
-                        ignoreLocation: true,
-                        ignoreFieldNorm: true
-                    });
-
-                    const grid = new Grid({
-                        columns: [{
-                                name: 'ID',
-                                hidden: true
-                            },
-                            {
-                                name: 'Nº Pedido\nData\nNome/Razão Social/Fantasia\nValor Total',
-                                sort: true,
-                                attributes: (cell, row) => {
-                                    return {
-                                        'data-column-title': 'true',
-                                        'style': 'white-space: pre-line;'
-                                    };
-                                },
-                                formatter: cell => html(cell.replace(/\s\/\s/g, '<br>'))
-                            },
-                            {
-                                name: 'Ações',
-                                sort: false,
-                                formatter: (_, row) => html(
-                                    `<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-1 mr-1 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded" onclick="window.location.href='/pedido?id=${row.cells[0].data}'">
+        if (window.innerWidth < 880) {
+            const grid = new Grid({
+                columns: [{
+                        name: 'ID',
+                        hidden: true
+                    },
+                    {
+                        name: 'Nº Pedido\nData\nNome/Razão Social/Fantasia\nValor Total',
+                        sort: true,
+                        attributes: (cell, row) => {
+                            return {
+                                'data-column-title': 'true',
+                                'style': 'white-space: pre-line;'
+                            };
+                        },
+                        formatter: cell => html(cell.replace(/\s\/\s/g, '<br>'))
+                    },
+                    {
+                        name: 'Ações',
+                        sort: false,
+                        formatter: (_, row) => html(
+                            `<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-1 mr-1 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded" onclick="window.location.href='/pedido?id=${row.cells[0].data}'">
                                         Editar
                                     </button>`
-                                )
-                            }
-                        ],
-                        sort: true,
-                        search: {
-                            custom: (query, rows) => {
-                                const results = fuse.search(query);
-                                return results.map(result => result.item);
-                            }
-                        },
-                        pagination: {
-                            enabled: true,
-                            limit: 5
-                        },
-                        language: {
-                            'search': {
-                                'placeholder': 'Pesquise seu pedido...'
-                            },
-                            'pagination': {
-                                'previous': 'Anterior',
-                                'next': 'Próxima',
-                                'navigate': (page, pages) => `Página ${page} de ${pages}`,
-                                'page': (page) => `Página ${page}`,
-                                'showing': 'Mostrando',
-                                'of': 'de',
-                                'to': 'até',
-                                'results': () => 'resultados',
-                            },
-                            'loading': 'Carregando...',
-                            'noRecordsFound': 'Nenhum pedido encontrado',
-                            'error': 'Ocorreu um erro ao buscar os dados',
-                        },
-                        data: dataSales
-                    }).render(document.getElementById("divTablePedidos"));
-                } else {
-                    response.data.forEach(element => {
-                        const dateSale = formatDate(element.dcfs_data_emissao)
-
-                        dataSales.push([
+                        )
+                    }
+                ],
+                sort: true,
+                search: {
+                    server: {
+                        url: (prev, keyword) => `${prev}?search=${keyword}`
+                    }
+                },
+                server: {
+                    url: '/getSalesByTermSearch',
+                    then: data => data.map(element => {
+                        const dateSale = formatDate(element.dcfs_data_emissao);
+                        return [
+                            element.dcfs_id,
+                            'Nº: ' + element.dcfs_numero +
+                            " / " + dateSale +
+                            " / " + element.pessoa.pess_apelido_fantasia +
+                            " / R$ " + element.dcfs_valor_total.replace('.', ','),
+                            null
+                        ];
+                    })
+                },
+                pagination: {
+                    enabled: true,
+                    limit: 5
+                },
+                language: {
+                    'search': {
+                        'placeholder': 'Pesquise seu pedido...'
+                    },
+                    'pagination': {
+                        'previous': 'Anterior',
+                        'next': 'Próxima',
+                        'navigate': (page, pages) => `Página ${page} de ${pages}`,
+                        'page': (page) => `Página ${page}`,
+                        'showing': 'Mostrando',
+                        'of': 'de',
+                        'to': 'até',
+                        'results': () => 'resultados',
+                    },
+                    'loading': 'Carregando...',
+                    'noRecordsFound': 'Nenhum pedido encontrado',
+                    'error': 'Ocorreu um erro ao buscar os dados',
+                }
+            }).render(document.getElementById("divTablePedidos"));
+        } else {
+            const grid = new Grid({
+                columns: [{
+                        name: 'ID',
+                        hidden: true
+                    },
+                    "Nº Pedido",
+                    "Data",
+                    "Nome/Razão Social/Fantasia",
+                    "Valor Total",
+                    {
+                        name: 'Ações',
+                        sort: false,
+                        formatter: (_, row) => html(
+                            `<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-1 mr-1 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" onclick="window.location.href='/pedido?id=${row.cells[0].data}'">
+                                        Editar
+                                    </button>`
+                        )
+                    }
+                ],
+                sort: true,
+                search: {
+                    server: {
+                        url: (prev, keyword) => `${prev}?search=${keyword}`
+                    }
+                },
+                server: {
+                    url: '/getSalesByTermSearch',
+                    then: data => data.map(element => {
+                        const dateSale = formatDate(element.dcfs_data_emissao);
+                        return [
                             element.dcfs_id,
                             element.dcfs_numero,
                             dateSale,
                             element.pessoa.pess_apelido_fantasia,
                             'R$ ' + element.dcfs_valor_total.replace('.', ','),
                             null
-                        ])
+                        ];
                     })
-
-                    document.getElementById('divPedidos').style.display = 'block';
-
-                    const fuse = new Fuse(dataSales, {
-                        keys: ['Nº Pedido', 'Data', 'Nome/Razão Social/Fantasia', 'Valor Total', 'Ações'],
-                        shouldSort: true,
-                        includeScore: true,
-                        threshold: 0.3,
-                        ignoreLocation: true,
-                        ignoreFieldNorm: true
-                    });
-
-                    const grid = new Grid({
-                        columns: [{
-                                name: 'ID',
-                                hidden: true
-                            },
-                            "Nº Pedido",
-                            "Data",
-                            "Nome/Razão Social/Fantasia",
-                            "Valor Total",
-                            {
-                                name: 'Ações',
-                                sort: false,
-                                formatter: (_, row) => html(
-                                    `<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 mb-1 mr-1 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" onclick="window.location.href='/pedido?id=${row.cells[0].data}'">
-                                        Editar
-                                    </button>`
-                                )
-                            }
-                        ],
-                        sort: true,
-                        search: {
-                            custom: (query, rows) => {
-                                const results = fuse.search(query);
-                                return results.map(result => result.item);
-                            }
-                        },
-                        pagination: true,
-                        language: {
-                            'search': {
-                                'placeholder': 'Pesquise seu pedido...'
-                            },
-                            'pagination': {
-                                'previous': 'Anterior',
-                                'next': 'Próxima',
-                                'navigate': (page, pages) => `Página ${page} de ${pages}`,
-                                'page': (page) => `Página ${page}`,
-                                'showing': 'Mostrando',
-                                'of': 'de',
-                                'to': 'até',
-                                'results': () => 'resultados',
-                            },
-                            'loading': 'Carregando...',
-                            'noRecordsFound': 'Nenhum pedido encontrado',
-                            'error': 'Ocorreu um erro ao buscar os dados',
-                        },
-                        data: dataSales
-                    }).render(document.getElementById("divTablePedidos"));
+                },
+                pagination: {
+                    enabled: true,
+                    limit: 10
+                },
+                language: {
+                    'search': {
+                        'placeholder': 'Pesquise seu pedido...'
+                    },
+                    'pagination': {
+                        'previous': 'Anterior',
+                        'next': 'Próxima',
+                        'navigate': (page, pages) => `Página ${page} de ${pages}`,
+                        'page': (page) => `Página ${page}`,
+                        'showing': 'Mostrando',
+                        'of': 'de',
+                        'to': 'até',
+                        'results': () => 'resultados',
+                    },
+                    'loading': 'Carregando...',
+                    'noRecordsFound': 'Nenhum pedido encontrado',
+                    'error': 'Ocorreu um erro ao buscar os dados',
                 }
-            })
-            .catch(error => {
-                console.log(error)
-            })
+            }).render(document.getElementById("divTablePedidos"));
+        }
 
 
         function getBusinessUnitData() {
