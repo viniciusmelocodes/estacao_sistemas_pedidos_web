@@ -28,6 +28,12 @@
         .qtde-total {
             padding: 10px;
         }
+
+        .word-break {
+            word-break: break-word;
+            white-space: pre-line;
+        }
+
     </style>
 
     <!-- Scripts -->

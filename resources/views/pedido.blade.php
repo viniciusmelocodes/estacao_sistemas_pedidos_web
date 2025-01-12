@@ -55,7 +55,8 @@
                                 </label>
                                 <input
                                     class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    id="referencia" name="dcfs_referencia" type="text">
+                                    id="referencia" name="dcfs_referencia" type="text"
+                                    oninput="window.converterCaixaAlta(event)">
                             </div>
                         </div>
                         <hr>
@@ -65,7 +66,7 @@
                         <div
                             class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 cursor-pointer">
                             <div class="flex flex-wrap -mx-3 mb-2">
-                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                <div class="w-full sm:w-4/12 md:w-4/12 lg:w-4/12 xl:w-5/12 px-3 mb-6 md:mb-0">
                                     <label class="tracking-wide text-gray-700 text-sm font-bold mb-2">
                                         Produto
                                     </label>
@@ -77,7 +78,7 @@
                                     <div id="warningProduto" class="text-red-500 text-sm hidden">É necessário selecionar
                                         o produto.</div>
                                 </div>
-                                <div class="w-full md:w-1/12 px-3 mb-6 md:mb-0">
+                                <div class="w-full md:w-2/12 px-3 mb-6 md:mb-0">
                                     <label class="tracking-wide text-gray-700 text-sm font-bold mb-2">
                                         Qtde
                                     </label>
@@ -124,7 +125,7 @@
                         <div
                             class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 cursor-pointer">
                             <div class="flex flex-wrap -mx-3 mb-2">
-                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                <div class="w-full md:w-5/12 lg:w-5/12 xl:w-6/12 px-3 mb-6 md:mb-0">
                                     <!-- Forma de pagamento -->
                                     <label class="tracking-wide text-gray-700 text-sm font-bold mb-2" for="pagamento">
                                         Forma de Pagamento
@@ -173,7 +174,7 @@
                         </div>
                         <hr>
                         <div class="flex flex-wrap -mx-3 mt-4 mb-2">
-                            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                            <div class="w-full msm:w-4/12 md:w-4/12 lg:w-4/12 xl:w-5/12 px-3 mb-6 md:mb-0">
                                 <label class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2">
                                     Valor de Desconto Neste Pedido
                                 </label>
@@ -181,25 +182,25 @@
                                     class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     id="descontoPedido" type="number" placeholder="0,00" step="0.01">
                             </div>
-                            <div class="w-full md:w-1/3 px-3 mb-6 mt-2 md:mb-0">
+                            <div class="w-full sm:w-4/12 md:w-4/12 lg:w-4/12 xl:w-5/12 px-3 mb-6 mt-2 md:mb-0">
                                 <label class="tracking-wide text-gray-700 text-xl font-bold mb-2"
                                     id="labelValorTotalLiquido">
                                     Valor Total Líquido: R$ 0,00
                                 </label>
                             </div>
-                            <div class="w-full md:w-1/3  px-3 mb-6 mt-2 md:mb-0">
+                            <div class="w-full sm:w-4/12 md:w-4/12 lg:w-4/12 xl:w-5/12 px-3 mb-6 mt-2 md:mb-0">
                                 <label class="tracking-wide text-gray-700 text-xl font-bold mb-2"
                                     id="labelValorTotalBruto">
                                     Valor Total Bruto: R$ 0,00
                                 </label>
                             </div>
-                            <div class="w-full md:w-1/3  px-3 mb-6 mt-2 md:mb-0">
+                            <div class="w-full sm:w-4/12 md:w-4/12 lg:w-4/12 xl:w-5/12 px-3 mb-6 mt-2 md:mb-0">
                                 <label class="tracking-wide text-gray-700 text-xl font-bold mb-2"
                                     id="labelValorTotalIPI">
                                     Valor Total IPI: R$ 0,00
                                 </label>
                             </div>
-                            <div class="w-full md:w-1/3  px-3 mb-6 mt-2 md:mb-0">
+                            <div class="w-full sm:w-4/12 md:w-4/12 lg:w-4/12 xl:w-5/12 px-3 mb-6 mt-2 md:mb-0">
                                 <label class="tracking-wide text-gray-700 text-xl font-bold mb-2"
                                     id="labelValorTotalIcmsSt">
                                     Valor Total ICMS ST: R$ 0,00
@@ -319,7 +320,7 @@
             })
         });
 
-        if (window.innerWidth < 600) {
+        if (window.innerWidth < 700) {
             gridItens = new Grid({
                 columns: [{
                         name: 'prod_id',
@@ -327,9 +328,7 @@
                     },
                     {
                         name: "Produto\nQtde\nValor Unit.\nTotal",
-                        formatter: (cell, row) => {
-                            return html(`<div style="white-space: pre-line;">${cell}</div>`);
-                        },
+                        formatter: cell => html(cell.replace(/\s\/\s/g, '<br>')),
                         attributes: (cell, row) => {
                             return {
                                 'data-column-title': 'true',
@@ -376,9 +375,7 @@
                     },
                     {
                         name: "Forma de Pag.\nValor\nQtde Parc.",
-                        formatter: (cell, row) => {
-                            return html(`<div style="white-space: pre-line;">${cell}</div>`);
-                        },
+                        formatter: cell => html(cell.replace(/\s\/\s/g, '<br>')),
                         attributes: (cell, row) => {
                             return {
                                 'data-column-title': 'true',
@@ -589,7 +586,7 @@
             let valorTotal = document.getElementById('valorTotal').value
 
             // Itens com produtos repetidos não podem ser adicionados
-            if (window.innerWidth < 600) {
+            if (window.innerWidth < 700) {
                 window.dataItemsSale.forEach(row => {
                     if (row[0] == idProduto) {
                         Swal.fire({
@@ -623,7 +620,7 @@
                                             data: window.dataItemsSale
                                         }).forceRender();
 
-                                        if (window.innerWidth > 600) {
+                                        if (window.innerWidth > 700) {
                                             atualizarRodape();
                                         } else {
                                             calcularTotais()
@@ -665,7 +662,7 @@
                                             data: window.dataItemsSale
                                         }).forceRender();
 
-                                        if (window.innerWidth > 600) {
+                                        if (window.innerWidth > 700) {
                                             atualizarRodape();
                                         } else {
                                             calcularTotais()
@@ -703,7 +700,7 @@
                 data: window.dataItemsSale
             }).forceRender();
 
-            if (window.innerWidth > 600) {
+            if (window.innerWidth > 700) {
                 atualizarRodape();
             } else {
                 calcularTotais()
@@ -740,7 +737,7 @@
             let quantidadeParcelas = document.getElementById('quantidadeParcelas').value
 
             // Formas de pagamento repetidos não podem ser adicionados
-            if (window.innerWidth < 600) {
+            if (window.innerWidth < 700) {
                 window.dataPaymentMethods.forEach(row => {
                     if (row[0] == idFormaPagamento) {
                         Swal.fire({
@@ -817,7 +814,8 @@
                 return;
             }
 
-            let newRow = handleNewPaymentMethodGrid(idFormaPagamento, nomeFormaPagamento, valorFormaPagamento, quantidadeParcelas, 0)
+            let newRow = handleNewPaymentMethodGrid(idFormaPagamento, nomeFormaPagamento, valorFormaPagamento,
+                quantidadeParcelas, 0)
             window.dataPaymentMethods.push(newRow);
 
             $("#warningFormasPagamento").addClass('hidden')
@@ -853,7 +851,7 @@
                         data: window.dataItemsSale
                     }).forceRender();
 
-                    if (window.innerWidth > 600) {
+                    if (window.innerWidth > 700) {
                         atualizarRodape();
                     } else {
                         calcularTotais()
@@ -906,7 +904,7 @@
             handlePaymentMethod()
             handleProducts()
 
-            if (window.innerWidth > 600) {
+            if (window.innerWidth > 700) {
                 $("#labelValorTotalLiquido").parent().addClass('mt-8')
                 $("#labelValorTotalBruto").parent().addClass('mt-8')
             } else {
@@ -1033,7 +1031,8 @@
                             let quantidade = item.dfit_quantidade;
                             let valorUnitario = item.dfit_valor_unitario;
                             let valorTotal = item.dfit_valor_total_bruto
-                            let newRow = handleNewItemGrid(idProduto, nomeProduto, quantidade, valorUnitario, valorTotal, item.dfit_id)
+                            let newRow = handleNewItemGrid(idProduto, nomeProduto, quantidade,
+                                valorUnitario, valorTotal, item.dfit_id)
                             window.dataItemsSale.push(newRow);
                         })
 
@@ -1041,7 +1040,7 @@
                             data: window.dataItemsSale
                         }).forceRender();
 
-                        if (window.innerWidth > 600) {
+                        if (window.innerWidth > 700) {
                             atualizarRodape();
                         }
 
@@ -1053,7 +1052,9 @@
                             let nomeFormaPagamento = formaPagamento.forma_pagamento.frpg_nome;
                             let valorFormaPagamento = formaPagamento.dfpg_valor
                             let quantidadeParcelas = formaPagamento.dfpg_quantidade_parcelas;
-                            let newRow = handleNewPaymentMethodGrid(idFormaPagamento, nomeFormaPagamento, valorFormaPagamento, quantidadeParcelas, formaPagamento.dfpg_id)
+                            let newRow = handleNewPaymentMethodGrid(idFormaPagamento,
+                                nomeFormaPagamento, valorFormaPagamento, quantidadeParcelas,
+                                formaPagamento.dfpg_id)
                             window.dataPaymentMethods.push(newRow);
                         })
 
@@ -1066,8 +1067,10 @@
                         let valorTotalLiquido = parseFloat(valorTotalBruto - valorTotalDesconto);
 
                         $("#descontoPedido").val(valorTotalDesconto);
-                        $("#labelValorTotalLiquido").text(`Valor Total Líquido: R$ ${valorTotalLiquido.toFixed(2).replace('.', ',')}`);
-                        $("#labelValorTotalBruto").text(`Valor Total Bruto: R$ ${valorTotalBruto.toFixed(2).replace('.', ',')}`);
+                        $("#labelValorTotalLiquido").text(
+                            `Valor Total Líquido: R$ ${valorTotalLiquido.toFixed(2).replace('.', ',')}`);
+                        $("#labelValorTotalBruto").text(
+                            `Valor Total Bruto: R$ ${valorTotalBruto.toFixed(2).replace('.', ',')}`);
 
                         window.descontoPedido = valorTotalDesconto;
                         window.valorTotalLiquidoPedido = valorTotalLiquido;
@@ -1140,7 +1143,7 @@
 
                 let valorTotalFormaPagamento = 0
 
-                if (window.innerWidth < 600) {
+                if (window.innerWidth < 700) {
                     window.dataPaymentMethods.forEach(row => {
                         let arrayFormaPagamento = row[1].split(" / ");
                         valorTotalFormaPagamento += parseFloat(arrayFormaPagamento[1].replace(',', '.')
@@ -1188,7 +1191,7 @@
         function handleNewItemGrid(idProduto, nomeProduto, quantidade, valorUnitario, valorTotal, dfitId) {
             let newRow = [];
 
-            if (window.innerWidth < 600) {
+            if (window.innerWidth < 700) {
                 let item = nomeProduto + ' / ' + (parseFloat(quantidade).toFixed(2)).replace('.', ',') + ' / ' +
                     (parseFloat(valorUnitario).toFixed(2)).replace('.', ',') + ' / ' +
                     (parseFloat(valorTotal).toFixed(2)).replace('.', ',')
@@ -1214,10 +1217,11 @@
             return newRow;
         }
 
-        function handleNewPaymentMethodGrid(idFormaPagamento, nomeFormaPagamento, valorFormaPagamento, quantidadeParcelas, dfpgId) {
+        function handleNewPaymentMethodGrid(idFormaPagamento, nomeFormaPagamento, valorFormaPagamento, quantidadeParcelas,
+            dfpgId) {
             let newRow = [];
 
-            if (window.innerWidth < 600) {
+            if (window.innerWidth < 700) {
                 let item = nomeFormaPagamento + ' / R$ ' + (parseFloat(valorFormaPagamento).toFixed(2)).replace('.',
                         ',') + ' / ' +
                     quantidadeParcelas
@@ -1259,31 +1263,35 @@
 
         function saveSale() {
             axios.post('/saveSale', {
-                id: $("#id").val(),
-                mobile: window.innerWidth < 600 ? true : false,
-                pess_id: $('[name="pess_id"] option:selected').val(),
-                dcfs_modalidade_frete: $('[name="dcfs_modalidade_frete"] option:selected')
-                    .val(),
-                dcfs_referencia: $('[name="dcfs_referencia"]').val(),
-                itens: window.dataItemsSale,
-                formas_pagamento: window.dataPaymentMethods,
-                valor_desconto: window.descontoPedido,
-                valor_total_liquido: window.valorTotalLiquidoPedido,
-                valor_total_bruto: window.valorTotalPedido,
-            })
-            .then((response) => {
-                window.notyf.open({
-                    type: 'success',
-                    duration: 3000,
-                    message: 'Pedido concluído com sucesso!',
-                });
+                    id: $("#id").val(),
+                    mobile: window.innerWidth < 600 ? true : false,
+                    pess_id: $('[name="pess_id"] option:selected').val(),
+                    dcfs_modalidade_frete: $('[name="dcfs_modalidade_frete"] option:selected')
+                        .val(),
+                    dcfs_referencia: $('[name="dcfs_referencia"]').val(),
+                    itens: window.dataItemsSale,
+                    formas_pagamento: window.dataPaymentMethods,
+                    valor_desconto: window.descontoPedido,
+                    valor_total_liquido: window.valorTotalLiquidoPedido,
+                    valor_total_bruto: window.valorTotalPedido,
+                })
+                .then((response) => {
+                    window.notyf.open({
+                        type: 'success',
+                        duration: 3000,
+                        message: 'Pedido concluído com sucesso!',
+                    });
 
-                setTimeout(() => {
-                    window.location.href = '/pedidos';
-                }, 3000);
-            }).catch((err) => {
-                console.error(err);
-            });
+                    setTimeout(() => {
+                        window.location.href = '/pedidos';
+                    }, 3000);
+                }).catch((err) => {
+                    console.error(err);
+                });
+        }
+
+        window.converterCaixaAlta = (event) => {
+            event.target.value = event.target.value.toUpperCase();
         }
     </script>
 </x-app-layout>

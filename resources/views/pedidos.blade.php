@@ -65,7 +65,7 @@
 
         axios.get('/getAllSales')
             .then(response => {
-                if (window.innerWidth < 600) {
+                if (window.innerWidth < 880) {
                     response.data.forEach(element => {
                         const dateSale = formatDate(element.dcfs_data_emissao)
 
@@ -97,15 +97,13 @@
                             {
                                 name: 'Nº Pedido\nData\nNome/Razão Social/Fantasia\nValor Total',
                                 sort: true,
-                                formatter: (cell, row) => {
-                                    return html(`<div style="white-space: pre-line;">${cell}</div>`);
-                                },
                                 attributes: (cell, row) => {
                                     return {
                                         'data-column-title': 'true',
                                         'style': 'white-space: pre-line;'
                                     };
                                 },
+                                formatter: cell => html(cell.replace(/\s\/\s/g, '<br>'))
                             },
                             {
                                 name: 'Ações',
@@ -143,7 +141,7 @@
                                 'results': () => 'resultados',
                             },
                             'loading': 'Carregando...',
-                            'noRecordsFound': 'Nenhum registro encontrado',
+                            'noRecordsFound': 'Nenhum pedido encontrado',
                             'error': 'Ocorreu um erro ao buscar os dados',
                         },
                         data: dataSales
