@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class EPessoa extends Model
 {
@@ -35,4 +36,11 @@ class EPessoa extends Model
         'created_at',
         'updated_at',
     ];
+
+    protected function pessApelidoFantasia(): Attribute
+    {
+        return Attribute::make(
+            get: fn(string $value) => mb_strtoupper($value, 'UTF-8'),
+        );
+    }
 }

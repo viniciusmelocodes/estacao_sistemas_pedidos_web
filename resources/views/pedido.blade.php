@@ -214,7 +214,7 @@
                                 </label>
                                 <textarea
                                     class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    id="dcfs_observacao" name="dcfs_observacao" rows="5"></textarea>
+                                    id="dcfs_observacao" name="dcfs_observacao" rows="5" oninput="window.converterCaixaAlta(event)"></textarea>
                             </div>
                         </div>
                         <div class="py-4">

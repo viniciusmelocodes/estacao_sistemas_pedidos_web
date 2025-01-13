@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class EFormaPagamento extends Model
@@ -18,4 +19,11 @@ class EFormaPagamento extends Model
         'created_at',
         'updated_at',
     ];
+
+    protected function frpgNome(): Attribute
+    {
+        return Attribute::make(
+            get: fn(string $value) => mb_strtoupper($value, 'UTF-8'),
+        );
+    }
 }

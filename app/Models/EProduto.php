@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class EProduto extends Model
 {
@@ -46,4 +47,11 @@ class EProduto extends Model
         'created_at',
         'updated_at',
     ];
+
+    protected function prodNome(): Attribute
+    {
+        return Attribute::make(
+            get: fn(string $value) => mb_strtoupper($value, 'UTF-8'),
+        );
+    }
 }
