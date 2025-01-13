@@ -36,12 +36,12 @@
                                 <select id="modalidadeFrete" name="dcfs_modalidade_frete"
                                     class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 select2">
                                     <option value="">Selecione um tipo de frete</option>
-                                    <option value="0">Contratação do Frete por conta do Remetente (CIF)</option>
-                                    <option value="1">Contratação do Frete por conta do Destinatário (FOB)</option>
-                                    <option value="2">Contratação do Frete por conta de Terceiros</option>
-                                    <option value="3">Transporte Próprio por conta do Remetente</option>
-                                    <option value="4">Transporte Próprio por conta do Destinatário</option>
-                                    <option value="9">Sem Ocorrência de Transporte</option>
+                                    <option value="0">CONTRATAÇÃO DO FRETE POR CONTA DO REMETENTE (CIF)</option>
+                                    <option value="1">CONTRATAÇÃO DO FRETE POR CONTA DO DESTINATÁRIO (FOB)</option>
+                                    <option value="2">CONTRATAÇÃO DO FRETE POR CONTA DE TERCEIROS</option>
+                                    <option value="3">TRANSPORTE PRÓPRIO POR CONTA DO REMETENTE</option>
+                                    <option value="4">TRANSPORTE PRÓPRIO POR CONTA DO DESTINATÁRIO</option>
+                                    <option value="9">SEM OCORRÊNCIA DE TRANSPORTE</option>
                                 </select>
                                 <div id="warningTipoFrete" class="text-red-500 text-sm hidden">É necessário selecionar o
                                     tipo de frete.</div>
