@@ -51,7 +51,7 @@
                         hidden: true
                     },
                     {
-                        name: 'Nº Pedido\nData\nNome/Razão Social/Fantasia\nValor Total',
+                        name: 'Nº Pedido\nData\nNome\nValor Total',
                         sort: true,
                         attributes: (cell, row) => {
                             return {
