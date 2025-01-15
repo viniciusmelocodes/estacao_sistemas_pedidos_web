@@ -11,7 +11,7 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-// Pedido
+// >>>>>>>>>>>>>>>>>>>>>>>>> Pedido <<<<<<<<<<<<<<<<<<<<<<<<<<<<
 let gridItens = new Grid();
 let gridFormasPagamento = new Grid();
 window.dataItemsSale = []
@@ -271,9 +271,10 @@ function atualizarRodape() {
     const total = calcularTotalRodape();
     const rodapeHtml =
         ` <tr class="gridjs-foot">
-                    <td colspan="1">Totais</td>
+                    <td colspan="1" class="paddingGridjsFoot">Totais</td>
                     <td class="qtde-total">${(totalQtde.toFixed(2)).replace('.', ',')}</td>
-                    <td colspan="1"></td> <td>${(total.toFixed(2)).replace('.', ',')}</td>
+                    <td colspan="1"></td> 
+                    <td class="paddingGridjsFoot">${(total.toFixed(2)).replace('.', ',')}</td>
                     <td></td>
                   </tr> `;
 
@@ -324,8 +325,8 @@ window.calcularTotais = () => {
 }
 
 window.handleProdutoChange = (select) => {
-    const idProduto = select.value;
-    const nomeProduto = select.options[select.selectedIndex].text;
+    // const idProduto = select.value;
+    // const nomeProduto = select.options[select.selectedIndex].text;
 }
 
 if (document.getElementById("btnAdicionarItem") != null) {
@@ -366,8 +367,6 @@ if (document.getElementById("btnAdicionarItem") != null) {
                         if (result.isConfirmed) {
                             window.dataItemsSale.forEach(row => {
                                 if (row[0] == idProduto) {
-                                    let arrayItem = row[1].split(" / ");
-
                                     row[1] = nomeProduto + " / " + (parseFloat(
                                         quantidade).toFixed(2)).replace('.',
                                             ',') +
@@ -612,8 +611,6 @@ document.addEventListener("click", function (event) {
             let tempDiv = document.createElement('div');
             let column = window.innerWidth > 600 ? 5 : 2;
             tempDiv.innerHTML = window.dataItemsSale[rowIndex][column];
-            const button = tempDiv.querySelector('button');
-            const totalItemRemovido = parseFloat(button.getAttribute('data-total-item'));
 
             window.dataItemsSale.splice(rowIndex, 1);
 
@@ -727,7 +724,7 @@ function handlePaymentMethod() {
             }
 
             data.forEach(function (paymentMethod) {
-                var newOption = new Option(paymentMethod.frpg_nome, paymentMethod.frpg_id, false,
+                let newOption = new Option(paymentMethod.frpg_nome, paymentMethod.frpg_id, false,
                     false);
                 $(newOption).attr('data-qtde-parcelas', paymentMethod.frpg_parcelas);
                 $('#formasPagamento').append(newOption).trigger('change');
@@ -753,7 +750,7 @@ function handleProducts() {
             }
 
             data.forEach(function (product) {
-                var newOption = new Option(product.prod_nome, product.prod_id, false, false);
+                let newOption = new Option(product.prod_nome, product.prod_id, false, false);
                 $(newOption).attr('data-valor-unitario', product.prod_preco_varejo);
                 $(newOption).attr('data-aliquota-ipi', product.prod_aliquota_ipi);
                 $(newOption).attr('data-aliquota-icms-st', product.prod_aliquota_icms_st);
@@ -769,11 +766,11 @@ function getQueryVariable(variable) {
     let query = window.location.search.substring(1);
     let vars = query.split("&");
 
-    for (var i = 0; i < vars.length; i++) {
-        let pair = vars[i].split("=");
+    for (let pair of vars) {
+        let [key, value] = pair.split("=");
 
-        if (pair[0] == variable) {
-            return pair[1];
+        if (key === variable) {
+            return value;
         }
     }
 }
@@ -881,81 +878,85 @@ function handleValidationForm() {
     $("#formSaveSale").submit(function (event) {
         event.preventDefault();
 
-        let isValid = true;
+        let isValid = validateForm();
         let message = 'Revise os campos com aviso em vermelho e tente novamente.';
-        let messagePaymentMethods = '';
+        let messagePaymentMethods = checkPaymentMethods();
 
-        $("#warningCliente").addClass('hidden')
-        $("#warningFormaPagamento").addClass('hidden')
-        $("#warningTipoFrete").addClass('hidden')
-        $("#warningItens").addClass('hidden')
-        $("#warningFormasPagamento").addClass('hidden')
+        if (!isValid || messagePaymentMethods) {
+            showWarningMessage(messagePaymentMethods || message, messagePaymentMethods ? 6000 : 3000);
+        } else {
+            showProcessingMessage();
+            saveSale();
+        }
+    });
+
+    function validateForm() {
+        let isValid = true;
+        const warnings = ["#warningCliente", "#warningFormaPagamento", "#warningTipoFrete", "#warningItens", "#warningFormasPagamento"];
+    
+        warnings.forEach(warning => $(warning).addClass('hidden'));
 
         if ($('[name="pess_id"] option:selected').val() == '') {
-            $("#warningCliente").removeClass('hidden')
+            $("#warningCliente").removeClass('hidden');
             isValid = false;
         }
 
         if ($('[name="dcfs_modalidade_frete"] option:selected').val() == '') {
-            $("#warningTipoFrete").removeClass('hidden')
+            $("#warningTipoFrete").removeClass('hidden');
             isValid = false;
         }
 
         if (window.dataItemsSale.length == 0) {
-            $("#warningItens").removeClass('hidden')
+            $("#warningItens").removeClass('hidden');
             isValid = false;
         }
 
         if (window.dataPaymentMethods.length == 0) {
-            $("#warningFormasPagamento").removeClass('hidden')
+            $("#warningFormasPagamento").removeClass('hidden');
             isValid = false;
         }
 
-        let valorTotalFormaPagamento = 0
+        return isValid;
+    }
 
+    function checkPaymentMethods() {
+        let valorTotalFormaPagamento = calculateTotalPayment();
+
+        if (valorTotalFormaPagamento > 0 && valorTotalFormaPagamento != window.valorTotalLiquidoPedido) {
+            return 'O valor total das formas de pagamento não corresponde ao valor total do pedido.';
+        }
+
+        return '';
+    }
+
+    function calculateTotalPayment() {
         if (window.innerWidth < 700) {
-            window.dataPaymentMethods.forEach(row => {
+            return window.dataPaymentMethods.reduce((total, row) => {
                 let arrayFormaPagamento = row[1].split(" / ");
-                valorTotalFormaPagamento += parseFloat(arrayFormaPagamento[1].replace(',', '.')
-                    .replace('R$ ', ''))
-            })
-
-            if (valorTotalFormaPagamento > 0 && valorTotalFormaPagamento != window
-                .valorTotalLiquidoPedido) {
-                messagePaymentMethods =
-                    'O valor total das formas de pagamento não corresponde ao valor total do pedido.';
-                isValid = false;
-            }
+                return total + parseFloat(arrayFormaPagamento[1].replace(',', '.').replace('R$ ', ''));
+            }, 0);
         } else {
-            window.dataPaymentMethods.forEach(row => {
-                valorTotalFormaPagamento += parseFloat(row[2].replace(',', '.')
-                    .replace('R$ ', ''))
-            })
-
-            if (valorTotalFormaPagamento > 0 && valorTotalFormaPagamento != window
-                .valorTotalLiquidoPedido) {
-                messagePaymentMethods =
-                    'O valor total das formas de pagamento não corresponde ao valor total do pedido.';
-                isValid = false;
-            }
+            return window.dataPaymentMethods.reduce((total, row) => {
+                return total + parseFloat(row[2].replace(',', '.').replace('R$ ', ''));
+            }, 0);
         }
+    }
 
-        if (!isValid) {
-            window.notyf.open({
-                type: 'warning',
-                duration: messagePaymentMethods != '' ? 6000 : 3000,
-                message: `<i class="bi bi-exclamation-circle"></i> ${messagePaymentMethods != '' ? messagePaymentMethods : message}`,
-            });
-        } else {
-            window.notyf.open({
-                type: 'warning',
-                duration: 5000,
-                message: '<i class="bi bi-exclamation-circle"></i> Aguarde um momento que estamos concluindo o seu pedido...',
-            });
+    function showWarningMessage(message, duration) {
+        window.notyf.open({
+            type: 'warning',
+            duration: duration,
+            message: `<i class="bi bi-exclamation-circle"></i> ${message}`,
+        });
+    }
 
-            saveSale();
-        }
-    })
+    function showProcessingMessage() {
+        window.notyf.open({
+            type: 'warning',
+            duration: 5000,
+            message: '<i class="bi bi-exclamation-circle"></i> Aguarde um momento que estamos concluindo o seu pedido...',
+        });
+    }
 }
 
 function handleNewItemGrid(idProduto, nomeProduto, quantidade, valorUnitario, valorTotal, dfitId) {
@@ -1034,7 +1035,7 @@ window.goToNewPedido = () => {
 function saveSale() {
     axios.post('/saveSale', {
         id: $("#id").val(),
-        mobile: window.innerWidth < 600 ? true : false,
+        mobile: window.innerWidth < 600,
         pess_id: $('[name="pess_id"] option:selected').val(),
         dcfs_modalidade_frete: $('[name="dcfs_modalidade_frete"] option:selected')
             .val(),
@@ -1064,7 +1065,7 @@ window.converterCaixaAlta = (event) => {
     event.target.value = event.target.value.toUpperCase();
 }
 
-// Pedidos
+// >>>>>>>>>>>>>>>>>>>>>>>>> Pedidos <<<<<<<<<<<<<<<<<<<<<<<<<<<<
 getBusinessUnitDataPedidos()
 
 function formatDate(dateString) {
@@ -1083,7 +1084,7 @@ function formatDate(dateString) {
 
 if (document.getElementById("divTablePedidos") != null) {
     if (window.innerWidth < 880) {
-        const grid = new Grid({
+        new Grid({
             columns: [{
                 name: 'ID',
                 hidden: true
@@ -1136,7 +1137,7 @@ if (document.getElementById("divTablePedidos") != null) {
             language: languageGrid
         }).render(document.getElementById("divTablePedidos"));
     } else {
-        const grid = new Grid({
+        new Grid({
             columns: [{
                 name: 'ID',
                 hidden: true

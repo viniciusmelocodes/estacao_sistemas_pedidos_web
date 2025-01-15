@@ -26,12 +26,16 @@
         }
 
         .qtde-total {
-            padding: 10px;
+            padding: 23px;
         }
 
         .word-break {
             word-break: break-word;
             white-space: pre-line;
+        }
+
+        .paddingGridjsFoot {
+            padding: 23px;
         }
 
     </style>
