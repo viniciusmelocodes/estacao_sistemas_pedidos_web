@@ -119,19 +119,19 @@ class HelpersController extends Controller
                 $sales = EDocumentoFiscal::with(['pessoa'])
                     ->join('e_pessoas as pessoas', 'pessoas.pess_id', '=', 'e_documentos_fiscais.pess_id')
                     ->where('e_documentos_fiscais.unem_id', Auth::user()->unem_id)
-                    ->whereRaw('pessoas.pess_apelido_fantasia like "%' . $search . '%"')
+                    ->whereRaw('pessoas.pess_apelido_fantasia LIKE "%' . $search . '%"')
                     ->union(
                         EDocumentoFiscal::with(['pessoa'])
                             ->join('e_pessoas as pessoas', 'pessoas.pess_id', '=', 'e_documentos_fiscais.pess_id')
                             ->where('e_documentos_fiscais.unem_id', Auth::user()->unem_id)
-                            ->whereRaw('(e_documentos_fiscais.dcfs_numero like "%' . $searchNumeric . '%"
+                            ->whereRaw('(e_documentos_fiscais.dcfs_numero LIKE "%' . $searchNumeric . '%"
                                 OR DATE_FORMAT(e_documentos_fiscais.dcfs_data_emissao, "%d") = "' . $searchNumeric . '"
                                 OR DATE_FORMAT(e_documentos_fiscais.dcfs_data_emissao, "%m") = "' . $searchNumeric . '"
                                 OR DATE_FORMAT(e_documentos_fiscais.dcfs_data_emissao, "%Y") = "' . $searchNumeric . '"
                                 OR DATE_FORMAT(e_documentos_fiscais.dcfs_data_emissao, "%d/%m") = "' . $searchNumeric . '"
                                 OR DATE_FORMAT(e_documentos_fiscais.dcfs_data_emissao, "%m/%Y") = "' . $searchNumeric . '"
                                 OR DATE_FORMAT(e_documentos_fiscais.dcfs_data_emissao, "%d/%m/%Y") = "' . $searchNumeric . '"
-                                OR e_documentos_fiscais.dcfs_valor_total = "' . $searchNumeric . '")')
+                                OR e_documentos_fiscais.dcfs_valor_total LIKE "%' . $searchNumeric . '%")')
                     )
                     ->limit(50)
                     ->get();
