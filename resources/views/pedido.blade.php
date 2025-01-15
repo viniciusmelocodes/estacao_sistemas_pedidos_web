@@ -56,7 +56,7 @@
                                 <input
                                     class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     id="referencia" name="dcfs_referencia" type="text"
-                                    oninput="window.converterCaixaAlta(event)">
+                                    oninput="converterCaixaAlta(event)">
                             </div>
                         </div>
                         <hr>
@@ -214,7 +214,7 @@
                                 </label>
                                 <textarea
                                     class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    id="dcfs_observacao" name="dcfs_observacao" rows="5" oninput="window.converterCaixaAlta(event)"></textarea>
+                                    id="dcfs_observacao" name="dcfs_observacao" rows="5" oninput="converterCaixaAlta(event)"></textarea>
                             </div>
                         </div>
                         <div class="py-4">
